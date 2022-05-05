@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#8CF1F1F4"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/searchCardView"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:elevation="6dp"
+        app:cardCornerRadius="7dp">
+
+        <SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:focusedByDefault="true"
+            android:iconifiedByDefault="false"
+            android:queryHint="Search for title, author, etc."
+            tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="1dp"
+            android:queryBackground="@android:color/transparent">
+
+        </SearchView>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/searchCardView"
+        android:contextClickable="true"
+        android:visibility="gone"
+        android:numColumns="2"
+        android:paddingStart="20dp"
+        android:paddingEnd="0dp"
+        android:scrollbarDefaultDelayBeforeFade="@integer/material_motion_duration_long_2"
+        android:scrollbarSize="5dp"
+        android:scrollbarThumbVertical="@android:color/darker_gray"
+        android:scrollbars="vertical"
+        android:textAlignment="center">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+
+    <ScrollView
+        android:id="@+id/recentlyViewedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/searchCardView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="7dp"
+                android:layout_marginTop="30dp"
+                android:fontFamily="sans-serif"
+                android:text="Recently Viewed"
+                android:textColor="@color/black"
+                android:textSize="25sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"/>
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+    <!--    <androidx.cardview.widget.CardView-->
+<!--        android:id="@+id/recentSearchesCardView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="80dp"-->
+<!--        android:layout_below="@id/searchCardView"-->
+<!--        android:layout_marginStart="7dp"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:layout_marginEnd="7dp"-->
+<!--        app:cardCornerRadius="10dp">-->
+
+
+<!--        <TextView-->
+<!--            android:id="@+id/recentSearchTextView"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="4dp"-->
+<!--            android:text="Recent Searches" />-->
+<!--    </androidx.cardview.widget.CardView>-->
+
+</RelativeLayout>
