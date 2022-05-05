@@ -280,12 +280,12 @@ public class LoginActivity extends AppCompatActivity {
                                 Log.i(TAG, "onComplete: currentUser " + currentUser.getEmail());
                                 Log.i(TAG, "onComplete: currentUser " + currentUser.getDisplayName());
 
+                                getAuthToken();
 
-
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                intent.putExtra("UserName", currentUser.getDisplayName());
-                                startActivity(intent);
-                                finish();
+//                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//                                intent.putExtra("UserName", currentUser.getDisplayName());
+//                                startActivity(intent);
+//                                finish();
                             }
 
                         } else {
@@ -296,6 +296,26 @@ public class LoginActivity extends AppCompatActivity {
 
                     }
                 });
+
+
+    }
+
+    private void getAuthToken() {
+
+        String url ="https://accounts.google.com/o/oauth2/v2/auth?" +
+                "scope=https://www.googleapis.com/auth/books&" +
+                "response_type=code&" +
+                "state=security_token%3D138r5719ru3e1%26url%3Dhttps%3A%2F%2Foauth2.aspark.com%2Ftoken&" +
+           //     "redirect_uri=book-review-347211.firebaseapp.com&"+
+              "redirect_uri=com.aspark.allBooks%3A/oauth2redirect&" +
+                "client_id=906052742414-4jn3rbh19drr791el78uun1di9i7hs21.apps.googleusercontent.com&" +
+                "login_hint=ashutoshgupta1422@gmail.com";
+
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+//        intent.putExtra("url",url);
+        Log.i(TAG, "getAuthToken: url "+url);
+        startActivity(intent);
+
 
 
     }
