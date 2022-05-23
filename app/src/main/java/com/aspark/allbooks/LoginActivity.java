@@ -2,44 +2,28 @@ package com.aspark.allbooks;
 
 import static android.content.ContentValues.TAG;
 
-import androidx.activity.result.IntentSenderRequest;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Switch;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.auth.api.credentials.Credential;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
 import com.google.android.gms.auth.api.identity.BeginSignInResult;
 import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.identity.SignInClient;
 import com.google.android.gms.auth.api.identity.SignInCredential;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -51,13 +35,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Collections;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -94,6 +71,47 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+
+        handleRedirectUri();
+
+
+    }
+
+    private void handleRedirectUri() {
+
+
+        // ATTENTION: This was auto-generated to handle app links.
+        Intent appLinkIntent = getIntent();
+        String appLinkAction = appLinkIntent.getAction();
+        Log.i(TAG, "handleRedirectUri: appLinkAction "+appLinkAction);
+        Uri appLinkData = appLinkIntent.getData();
+
+        if (appLinkData != null) {
+
+            String authCode = appLinkData.getQueryParameter("code");
+            Log.i(TAG, "handleRedirectUri: authCode " + authCode);
+
+            getAccessToken(authCode);
+
+
+            if (authCode == null) {
+                String errorCode = appLinkData.getQueryParameter("error");
+                Log.i(TAG, "handleRedirectUri: ERROR  "+errorCode);
+
+            }
+        }
+
+
+
+    }
+
+    private void getAccessToken(String authCode) {
+
+    networkRequest netReq = new networkRequest(getApplicationContext());
+     String[] tokens = netReq.getAccessToken(authCode);
+
+        Log.i(TAG, "getAccessToken: access_token "+tokens[0]);
+        Log.i(TAG, "getAccessToken: refresh_token "+tokens[1]);
 
 
     }
@@ -280,7 +298,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Log.i(TAG, "onComplete: currentUser " + currentUser.getEmail());
                                 Log.i(TAG, "onComplete: currentUser " + currentUser.getDisplayName());
 
-                                getAuthToken();
+                                getAuthCode();
 
 //                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 //                                intent.putExtra("UserName", currentUser.getDisplayName());
@@ -300,16 +318,24 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void getAuthToken() {
+    private void getAuthCode() {
 
         String url ="https://accounts.google.com/o/oauth2/v2/auth?" +
                 "scope=https://www.googleapis.com/auth/books&" +
                 "response_type=code&" +
                 "state=security_token%3D138r5719ru3e1%26url%3Dhttps%3A%2F%2Foauth2.aspark.com%2Ftoken&" +
+
+        "redirect_uri=http://localhost:5000&" +
+//                "redirect_uri=com.googleusercontent.apps.906052742414-4jn3rbh19drr791el78uun1di9i7hs21/oauth2redirect&"+
+//                "redirect_uri=aspark://906052742414-4jn3rbh19drr791el78uun1di9i7hs21.apps.googleusercontent.com/oauth2redirect&" +
            //     "redirect_uri=book-review-347211.firebaseapp.com&"+
-              "redirect_uri=com.aspark.allBooks%3A/oauth2redirect&" +
-                "client_id=906052742414-4jn3rbh19drr791el78uun1di9i7hs21.apps.googleusercontent.com&" +
-                "login_hint=ashutoshgupta1422@gmail.com";
+//              "redirect_uri=com.aspark.allBooks%3A/oauth2redirect&" +
+
+       "client_id=906052742414-kd8vmeo07segpllhjjpgocqjlshbhs7t.apps.googleusercontent.com&"
+
+//                "client_id=906052742414-4jn3rbh19drr791el78uun1di9i7hs21.apps.googleusercontent.com&" +
+//                "login_hint=ashutoshgupta1422@gmail.com"
+                ;
 
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 //        intent.putExtra("url",url);

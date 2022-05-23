@@ -1,6 +1,8 @@
 package com.aspark.allbooks;
 
 import static android.content.ContentValues.TAG;
+import static com.android.volley.Request.Method.GET;
+import static com.android.volley.Request.Method.POST;
 import static com.aspark.allbooks.bookshelfFrag.SHELF_REQ_CODE;
 import static com.aspark.allbooks.searchFrag.SEARCH_REQ_CODE;
 
@@ -37,6 +39,7 @@ public class networkRequest {
     Context context;
     RequestQueue requestQueue;
     searchFrag searchFragObj;
+    public static String ACCESS_TOKEN ;
     //   private String[] titleArray = new String[100];
 //   private String[] authorArray = new String[100];
 //   private String[] coverUrlArray = new String[100];
@@ -50,6 +53,10 @@ public class networkRequest {
         requestQueue = Volley.newRequestQueue(context);
         searchFragObj = new searchFrag();
         this.recyclerView =recyclerView;
+
+    }
+    public networkRequest(Context context){
+        requestQueue = Volley.newRequestQueue(context);
 
     }
 
@@ -126,27 +133,99 @@ public class networkRequest {
                 error.getStackTrace();
 
             }
-        }) {
-
-            //add header to send authorisation code
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-
-                HashMap<String, String> header = new HashMap<>();
-                String authToken ="";
-                header.put("Authorization",authToken);
-
-                return header;
-            }
-
-        };
+        }) ;
 
         requestQueue.add(objectRequest);
 
         return booksDataList;
     }
 
+    public String[] getAccessToken(String authCode) {
 
+        String[] tokens = new String[2];
+
+        String tokenUrl ="https://oauth2.googleapis.com/token?" +
+                "code="+authCode +"&" +
+                "client_id="+ "906052742414-kd8vmeo07segpllhjjpgocqjlshbhs7t.apps.googleusercontent.com"+"&" +
+                "client_secret="+ "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" +"&" +
+                "redirect_uri=http://localhost:5000&" +
+                "grant_type=authorization_code";
+
+
+        JsonObjectRequest tokenObject = new JsonObjectRequest(POST, tokenUrl, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                try {
+                    Log.i(TAG, "onResponse: TOKEN "+response.toString());
+                    tokens[0] = response.getString("access_token");
+                    ACCESS_TOKEN = tokens[0];
+
+//                    tokens[1] = response.getString("refresh_token");
+
+                    getAccountData();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Log.i(TAG, "onErrorResponse: couldnt get token "+ error.getLocalizedMessage());
+
+            }
+        });
+
+        requestQueue.add(tokenObject);
+
+        return tokens;
+
+
+    }
+
+    private void getAccountData() {
+
+        String url = "https://www.googleapis.com/books/v1/mylibrary/bookshelves/0/volumes";
+
+        JsonObjectRequest objectRequest = new JsonObjectRequest(GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                Log.i(TAG, "onResponse: AccountData "+response.toString());
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Log.i(TAG, "onErrorResponse: getAccountData "+error.getMessage());
+
+            }
+        }){
+
+            //add header to send authorisation code
+            @Override
+            public Map<String, String> getHeaders() {
+
+                HashMap<String, String> header = new HashMap<>();
+
+                Log.i(TAG, "onResponse: ACCESS_TOKEN "+ACCESS_TOKEN);
+                header.put("Authorization","Bearer "+ACCESS_TOKEN);
+
+                return header;
+            }
+
+        } ;
+
+        requestQueue.add(objectRequest);
+
+
+    }
 
 
 }
