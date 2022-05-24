@@ -17,15 +17,15 @@ import java.util.List;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
     Context context;
-    networkRequest networkRequest ;
+    NetworkRequest networkRequest ;
 //    String[] titleArray ;
 //    String[] authorArray ;
 //    String[] coverUrlArray;
-    List<BooksData> booksDataList = new ArrayList<>();
+    List<DataModel> booksDataList = new ArrayList<>();
 
-    public SearchAdapter(Context context,List<BooksData> booksDataList) {
+    public SearchAdapter(Context context,List<DataModel> booksDataList) {
         this.context = context;
-        networkRequest = new networkRequest();
+        networkRequest = new NetworkRequest();
 //        this.titleArray = titleArray;
 //        this.authorArray = authorArray;
 //        this.coverUrlArray = coverUrlArray;

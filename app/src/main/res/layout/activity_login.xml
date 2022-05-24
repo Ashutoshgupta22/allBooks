@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context=".LoginActivity"
+    android:background="@color/ic_launcher_logo_background">
 
     <TextView
         android:id="@+id/textView"
@@ -12,7 +13,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/work_sans_semibold"
         android:text="Login"
-        android:textColor="@color/black"
+        android:textColor="#FF8038"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,32 +22,43 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.079" />
 
-    <EditText
-        android:id="@+id/loginEditText"
-        android:layout_width="wrap_content"
+    <com.google.android.material.textfield.TextInputLayout
+
+        android:id="@+id/materialInput"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textEmailAddress"
         android:hint="Gmail"
-        tools:layout_editor_absoluteX="91dp"
-        tools:layout_editor_absoluteY="272dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:focusedByDefault="false"
+        app:hintTextColor="#FF8038"
+        app:boxStrokeColor="#FF8038"
+        android:layout_margin="40dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/loginEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    </EditText>
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <Button
         android:id="@+id/loginBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Login"
+        android:textSize="20sp"
+
+        android:textColor="@color/ic_launcher_logo_background"
+        style="@style/Widget.Material3.Button.ElevatedButton"
         tools:layout_editor_absoluteX="174dp"
         tools:layout_editor_absoluteY="440dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="@id/loginEditText"/>
+        app:layout_constraintTop_toTopOf="@id/materialInput"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

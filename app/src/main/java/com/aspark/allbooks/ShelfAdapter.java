@@ -11,22 +11,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-import org.json.JSONArray;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class ShelfAdapter extends RecyclerView.Adapter<ShelfAdapter.ViewHolder> {
 
     Context context;
-    networkRequest networkReq;
-    List<BooksData> booksDataList;
+    NetworkRequest networkReq;
+    List<DataModel> booksDataList;
 
-    public ShelfAdapter(Context context,List<BooksData> booksDataList ) {
+    public ShelfAdapter(Context context,List<DataModel> booksDataList ) {
 
         this.context = context;
         this.booksDataList = booksDataList;
-        networkReq = new networkRequest();
+
     }
 
     @NonNull
@@ -52,7 +49,10 @@ public class ShelfAdapter extends RecyclerView.Adapter<ShelfAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
+        if (booksDataList != null)
         return booksDataList.size();
+        else
+            return 0;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

@@ -10,6 +10,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,6 +36,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -72,49 +75,13 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        handleRedirectUri();
-
-
-    }
-
-    private void handleRedirectUri() {
-
-
-        // ATTENTION: This was auto-generated to handle app links.
-        Intent appLinkIntent = getIntent();
-        String appLinkAction = appLinkIntent.getAction();
-        Log.i(TAG, "handleRedirectUri: appLinkAction "+appLinkAction);
-        Uri appLinkData = appLinkIntent.getData();
-
-        if (appLinkData != null) {
-
-            String authCode = appLinkData.getQueryParameter("code");
-            Log.i(TAG, "handleRedirectUri: authCode " + authCode);
-
-            getAccessToken(authCode);
-
-
-            if (authCode == null) {
-                String errorCode = appLinkData.getQueryParameter("error");
-                Log.i(TAG, "handleRedirectUri: ERROR  "+errorCode);
-
-            }
-        }
 
 
 
     }
 
-    private void getAccessToken(String authCode) {
-
-    networkRequest netReq = new networkRequest(getApplicationContext());
-     String[] tokens = netReq.getAccessToken(authCode);
-
-        Log.i(TAG, "getAccessToken: access_token "+tokens[0]);
-        Log.i(TAG, "getAccessToken: refresh_token "+tokens[1]);
 
 
-    }
 
     private void showOneTapSignIn() {
         //setting up one tap sign in with google.
@@ -156,16 +123,16 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
 
-                // No saved credentials found.
-                Log.d(TAG, e.getLocalizedMessage());
-                Log.i(TAG, "onFailure: no saved credential found");
+                        // No saved credentials found.
+                        Log.d(TAG, e.getLocalizedMessage());
+                        Log.i(TAG, "onFailure: no saved credential found");
 
-                showOneTapSignUp();
-            }
-        });
+                        showOneTapSignUp();
+                    }
+                });
 
     }
 
@@ -283,6 +250,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void authWithFirebase(String idToken) {
 
+        SharedPreferences preferences = getBaseContext().getSharedPreferences(getBaseContext().getPackageName(), MODE_PRIVATE);
+
         Log.i(TAG, "authWithFirebase: Authenticating with firebase ");
         AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(idToken, null);
         firebaseAuth.signInWithCredential(firebaseCredential)
@@ -298,7 +267,20 @@ public class LoginActivity extends AppCompatActivity {
                                 Log.i(TAG, "onComplete: currentUser " + currentUser.getEmail());
                                 Log.i(TAG, "onComplete: currentUser " + currentUser.getDisplayName());
 
-                                getAuthCode();
+                                if (preferences.getString("refresh_token", null) == null) {
+
+                                    Log.i(TAG, "Seems like its your first time ;)");
+                                    getAuthCode();
+                                } else {
+                                    Log.i(TAG, "Hey! you are back :)");
+
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    intent.putExtra("UserName", currentUser.getDisplayName());
+                                    startActivity(intent);
+                                    finish();
+
+                                }
+
 
 //                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 //                                intent.putExtra("UserName", currentUser.getDisplayName());
@@ -320,29 +302,38 @@ public class LoginActivity extends AppCompatActivity {
 
     private void getAuthCode() {
 
-        String url ="https://accounts.google.com/o/oauth2/v2/auth?" +
+        Log.i(TAG, "getAuthCode: Creating custom  tab");
+
+        String url = "https://accounts.google.com/o/oauth2/v2/auth?" +
                 "scope=https://www.googleapis.com/auth/books&" +
                 "response_type=code&" +
+                "access_type=offline&" +     // this parameter is added to get the refresh token. refresh token will only be generated for the first time new user sign in
+                // for testing purposes remove the access of the app from your google account and sign in again.
                 "state=security_token%3D138r5719ru3e1%26url%3Dhttps%3A%2F%2Foauth2.aspark.com%2Ftoken&" +
 
-        "redirect_uri=http://localhost:5000&" +
+                "redirect_uri=http://localhost:5000&" +
 //                "redirect_uri=com.googleusercontent.apps.906052742414-4jn3rbh19drr791el78uun1di9i7hs21/oauth2redirect&"+
 //                "redirect_uri=aspark://906052742414-4jn3rbh19drr791el78uun1di9i7hs21.apps.googleusercontent.com/oauth2redirect&" +
-           //     "redirect_uri=book-review-347211.firebaseapp.com&"+
+                //     "redirect_uri=book-review-347211.firebaseapp.com&"+
 //              "redirect_uri=com.aspark.allBooks%3A/oauth2redirect&" +
 
-       "client_id=906052742414-kd8vmeo07segpllhjjpgocqjlshbhs7t.apps.googleusercontent.com&"
+                "client_id=906052742414-kd8vmeo07segpllhjjpgocqjlshbhs7t.apps.googleusercontent.com&"
 
 //                "client_id=906052742414-4jn3rbh19drr791el78uun1di9i7hs21.apps.googleusercontent.com&" +
 //                "login_hint=ashutoshgupta1422@gmail.com"
                 ;
 
+        //TODO implement custom tabs , it is not redirecting to the app after getting auth code
+//        // Creating custom tab
+//        CustomTabsIntent.Builder customTab = new CustomTabsIntent.Builder();
+//
+//        customTab.setColorScheme(CustomTabsIntent.COLOR_SCHEME_SYSTEM);
+//        customTab.build().launchUrl(LoginActivity.this,Uri.parse(url));
+
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 //        intent.putExtra("url",url);
-        Log.i(TAG, "getAuthToken: url "+url);
+        Log.i(TAG, "getAuthToken: url " + url);
         startActivity(intent);
-
-
 
     }
 
@@ -351,25 +342,28 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
 
         Log.i(TAG, "onStart: Starting loginActivity ");
-        // checking if the user is signed in.
+
+        SharedPreferences preferences = getSharedPreferences(getPackageName(), MODE_PRIVATE);
+
+        String refreshToken = preferences.getString("refresh_token", null);
+        Log.i(TAG, "onStart: REFRESH_TOKEN " + refreshToken);
+        Log.i(TAG, "onStart: ACCESS_TOKEN " + preferences.getString("access_token", "Not found"));
 
 
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        if (currentUser != null) {
-            Log.i(TAG, "onStart: Current User " + currentUser.getDisplayName());
+//        // checking if the user is signed in and if the user has given access to google account after installing app.
+//        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+//        if (currentUser != null ) {
+//
+//            Log.i(TAG, "onStart: Current User " + currentUser.getDisplayName());
+//
+//            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//            startActivity(intent);
+//            finish();
+//        } else
+//            Log.i(TAG, "onStart: No current User found ");
 
-
-//            String authCode= getAuthCode();
-//            getAccessToken(authCode);
-
-
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            intent.putExtra("UserName", currentUser.getDisplayName());
-            startActivity(intent);
-            finish();
-        } else
-            Log.i(TAG, "onStart: No current User found ");
 
     }
+
 }
 

@@ -1,22 +1,26 @@
 package com.aspark.allbooks;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class homeFrag extends Fragment {
-    String userName;
-    TextView userNameTextView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-    public homeFrag(String userName) {
-        this.userName = userName;
+public class AccountFrag extends Fragment {
+    Button signOutBtn;
 
+
+    public AccountFrag() {
     }
 
     @Override
@@ -27,15 +31,22 @@ public class homeFrag extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home,container,false);
+        return inflater.inflate(R.layout.fragment_account,container,false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        userNameTextView= view.findViewById(R.id.userNameTextView);
+        signOutBtn= view.findViewById(R.id.signOutBtn);
 
-        userNameTextView.setText(userName);
+        signOutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+               FirebaseAuth.getInstance().signOut();
+                Log.i(TAG, "User Signed Out");
+            }
+        });
     }
 }

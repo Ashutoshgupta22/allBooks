@@ -18,22 +18,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class searchFrag extends Fragment {
+public class SearchFrag extends Fragment {
 
     RecyclerView recyclerView;
     ScrollView recentlyViewedScrollView;
     CardView searchCardView;
     SearchView searchView;
     String input;
-    networkRequest networkReq;
-    List<BooksData> booksDataList = new ArrayList<>();
+    NetworkRequest networkReq;
+    List<DataModel> booksDataList = new ArrayList<>();
     public static final int SEARCH_REQ_CODE = 10;
 //     String[] titleArray = new String[100];
 //     String[] authorArray = new String[100];
 //     String[] coverUrlArray = new String[100];
 
 
-    public searchFrag() {
+    public SearchFrag() {
     }
 
     @Override
@@ -78,7 +78,7 @@ public class searchFrag extends Fragment {
                searchView.clearFocus();
                Log.i("", "onQueryTextSubmit: input is "+input);
 
-               networkReq  = new networkRequest(input,getContext(),recyclerView);
+               networkReq  = new NetworkRequest(input,getContext(),recyclerView);
                booksDataList =  networkReq.search(SEARCH_REQ_CODE);
 //               Log.i("TAG", "onQueryTextSubmit: is bookList null "+booksDataList.isEmpty());
 //               searchAdapter = new SearchAdapter(getContext(),booksDataList);

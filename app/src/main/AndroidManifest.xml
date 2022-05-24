@@ -11,22 +11,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AllBooks">
         <activity
-            android:name=".WebAuthActivity"
-            android:exported="false" />
-        <activity
             android:name=".LoginActivity"
-            android:exported="true">
-            <intent-filter  android:autoVerify="true" >
-                <action android:name="android.intent.action.VIEW" />
+            android:exported="true"
+            android:theme="@style/loginTheme">
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:scheme="http"
-                    android:host="localhost"
-                    android:port="5000" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".SplashActivity"
@@ -41,10 +29,20 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+            <intent-filter  android:autoVerify="true" >
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="http"
+                    android:host="localhost"
+                    android:port="5000"/>
+                <data android:scheme="https"
+                    android:host="localhost"
+                    android:port="5000"/>
+
             </intent-filter>
         </activity>
 

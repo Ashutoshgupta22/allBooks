@@ -1,6 +1,6 @@
 package com.aspark.allbooks;
 
-public class BooksData {
+public class DataModel {
 
     String title,author,coverUrl;
 
