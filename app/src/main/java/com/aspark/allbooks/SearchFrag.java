@@ -28,9 +28,6 @@ public class SearchFrag extends Fragment {
     NetworkRequest networkReq;
     List<DataModel> booksDataList = new ArrayList<>();
     public static final int SEARCH_REQ_CODE = 10;
-//     String[] titleArray = new String[100];
-//     String[] authorArray = new String[100];
-//     String[] coverUrlArray = new String[100];
 
 
     public SearchFrag() {

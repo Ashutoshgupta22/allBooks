@@ -1,6 +1,8 @@
 package com.aspark.allbooks;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,31 +20,31 @@ import java.util.List;
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
     Context context;
     NetworkRequest networkRequest ;
-//    String[] titleArray ;
-//    String[] authorArray ;
-//    String[] coverUrlArray;
-    List<DataModel> booksDataList = new ArrayList<>();
+   public List<DataModel> booksDataList ;
+   View view;
+   int pos;
 
-    public SearchAdapter(Context context,List<DataModel> booksDataList) {
+   public SearchAdapter(Context context,List<DataModel> booksDataList) {
         this.context = context;
         networkRequest = new NetworkRequest();
-//        this.titleArray = titleArray;
-//        this.authorArray = authorArray;
-//        this.coverUrlArray = coverUrlArray;
         this.booksDataList = booksDataList;
-//        Log.i("searchAdapter", "title "+booksDataList.get(0).getTitle());
+
+    }
+
+    public SearchAdapter() {
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.grid_view_item_layout,parent,false);
-        return new ViewHolder(view) ;
+         view = LayoutInflater.from(context).inflate(R.layout.grid_view_item_layout,parent,false);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
+        pos = holder.getAdapterPosition();
 
         holder.bookTitle.setText(booksDataList.get(position).getTitle());
         holder.authorName.setText(booksDataList.get(position).getAuthor());
@@ -60,7 +62,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         return booksDataList.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public  class ViewHolder extends RecyclerView.ViewHolder {
         ImageView bookCoverImage;
         TextView bookTitle,authorName;
 
@@ -71,6 +73,39 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             authorName = itemView.findViewById(R.id.authorTextView);
             bookCoverImage = itemView.findViewById(R.id.shelfCoverImageView);
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                  //  SearchAdapter searchAdapter = new SearchAdapter();
+
+                  DataModel  bookData = booksDataList.get(getAdapterPosition());
+
+                    Intent intent = new Intent(view.getContext(),BookDetail.class);
+
+                    // to pass object of a class type , that class  should implement serializable.
+                    intent.putExtra("bookData",bookData);
+                    view.getContext().startActivity(intent);
+
+
+                }
+            });
+
         }
+
+
     }
+
+
+    // this method may be used when making viewHolder static
+
+//    public DataModel getBookData(int pos){
+//
+//
+//
+//       return booksDataList.get(pos);
+//
+//    }
+
 }

@@ -90,24 +90,9 @@ public class NetworkRequest {
 
                     for(int i=0; i < jsonArray.length();++i) {
 
-                        booksData = new DataModel();
                         volumeInfo = jsonArray.getJSONObject(i).getJSONObject("volumeInfo");
 
-                        booksData.setTitle(volumeInfo.getString("title"));
-                        if (volumeInfo.has("authors")){
-                            booksData.setAuthor(volumeInfo.getJSONArray("authors").getString(0));
-                        }
-                        else {
-                            booksData.setAuthor("Unknown");
-                        }
-                        if (volumeInfo.has("imageLinks")){
-
-                            //Convert http url to https
-                            String Url = volumeInfo.getJSONObject("imageLinks").getString("thumbnail");
-                            StringBuilder builder = new StringBuilder(Url);
-                            booksData.setCoverUrl(builder.insert(4,'s').toString());
-                            booksDataList.add(booksData);
-                        }
+                        booksDataList.add(storeData(volumeInfo));
 
                         Log.i("TAG", "onResponse: title "+booksDataList.get(0).getTitle());
 
@@ -115,10 +100,7 @@ public class NetworkRequest {
                         recyclerView.setAdapter(new SearchAdapter(context,booksDataList));
                         else if (REQ_CODE==SHELF_REQ_CODE)
                             recyclerView.setAdapter(new ShelfAdapter(context,booksDataList));
-
                     }
-
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -139,6 +121,86 @@ public class NetworkRequest {
         requestQueue.add(objectRequest);
 
         return booksDataList;
+    }
+
+    private DataModel storeData( JSONObject volumeInfo) throws JSONException {
+
+        DataModel  booksData = new DataModel();
+
+        booksData.setTitle(volumeInfo.getString("title"));
+
+        if (volumeInfo.has("authors")){
+            booksData.setAuthor(volumeInfo.getJSONArray("authors").getString(0));
+        }
+        else {
+            booksData.setAuthor("Unknown");
+        }
+        if (volumeInfo.has("imageLinks")){
+
+            //Convert http url to https
+            String Url = volumeInfo.getJSONObject("imageLinks").getString("thumbnail");
+            StringBuilder builder = new StringBuilder(Url);
+            booksData.setCoverUrl(builder.insert(4,'s').toString());
+
+        }
+
+        if (volumeInfo.has("description"))
+            booksData.setDescription(volumeInfo.getString("description"));
+        else
+            booksData.setDescription("No Description");
+
+        if (volumeInfo.has("subtitle"))
+            booksData.setSubTitle(volumeInfo.getString("subtitle"));
+        else
+            booksData.setSubTitle(null);
+
+        if (volumeInfo.has("publisher"))
+            booksData.setPublisher(volumeInfo.getString("publisher"));
+        else
+            booksData.setPublisher("Unknown");
+
+        if (volumeInfo.has("publishedDate"))
+            booksData.setPublishedDate(volumeInfo.getString("publishedDate"));
+        else
+            booksData.setPublishedDate("Unknown");
+
+        if (volumeInfo.has("pageCount"))
+            booksData.setNoOfPages(volumeInfo.getString("pageCount"));
+        else
+            booksData.setNoOfPages("Unknown");
+
+        if (volumeInfo.has("language"))
+            booksData.setLanguage(volumeInfo.getString("language"));
+        else
+            booksData.setLanguage("Unknown");
+
+        if (volumeInfo.has("averageRating"))
+            booksData.setRating(volumeInfo.getString("averageRating"));
+        else
+            booksData.setRating("0");
+
+        if (volumeInfo.has("ratingsCount"))
+            booksData.setRatingsCount(volumeInfo.getString("ratingsCount"));
+        else
+            booksData.setRatingsCount("0");
+
+
+        List<String> catList = new ArrayList<>();
+
+        if (volumeInfo.has("categories")) {
+
+            JSONArray categories= volumeInfo.getJSONArray("categories");
+
+            for (int i= 0 ; i< categories.length() ; ++i)
+                catList.add(categories.getString(i));
+        }
+        booksData.setCategories(catList);
+
+
+
+        return booksData;
+
+
     }
 
     public void getAccessToken(String authCode) {
@@ -215,25 +277,9 @@ public class NetworkRequest {
 
                     for(int i=0; i < jsonArray.length();++i) {
 
-                        booksData = new DataModel();
                         volumeInfo = jsonArray.getJSONObject(i).getJSONObject("volumeInfo");
 
-                        booksData.setTitle(volumeInfo.getString("title"));
-                        if (volumeInfo.has("authors")){
-                            booksData.setAuthor(volumeInfo.getJSONArray("authors").getString(0));
-                        }
-                        else {
-                            booksData.setAuthor("Unknown");
-                        }
-                        if (volumeInfo.has("imageLinks")){
-
-                            //Convert http url to https
-                            String Url = volumeInfo.getJSONObject("imageLinks").getString("thumbnail");
-                            StringBuilder builder = new StringBuilder(Url);
-                            booksData.setCoverUrl(builder.insert(4,'s').toString());
-                            shelfList.add(booksData);
-                        }
-
+                        shelfList.add(storeData(volumeInfo));
                         recyclerView.setAdapter(new ShelfAdapter(context,shelfList));
 
                     }
@@ -317,6 +363,46 @@ public class NetworkRequest {
     }
 
 
+    public void fromAuthor(String authorName) {
+
+        List<DataModel> fromAuthorList = new ArrayList<>();
+
+        String url = "https://www.googleapis.com/books/v1/volumes?q=+inauthor:"+authorName;
+
+        JsonObjectRequest objectRequest = new JsonObjectRequest(GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONArray jsonArray ;
+                JSONObject volumeInfo;
+                try {
+                    jsonArray = response.getJSONArray("items");
+
+                    for(int i=0; i < jsonArray.length();++i) {
+
+                        volumeInfo = jsonArray.getJSONObject(i).getJSONObject("volumeInfo");
+
+                        fromAuthorList.add(storeData(volumeInfo));
+                        recyclerView.setAdapter(new ShelfAdapter(context,fromAuthorList));
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();}
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "from Author Error "+error.getMessage());
+
+            }
+        });
+
+
+        requestQueue.add(objectRequest);
+
+    }
 }
 
 

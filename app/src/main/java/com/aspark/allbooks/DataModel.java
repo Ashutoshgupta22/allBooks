@@ -1,8 +1,80 @@
 package com.aspark.allbooks;
 
-public class DataModel {
+import java.io.Serializable;
+import java.util.List;
 
-    String title,author,coverUrl;
+public class DataModel implements Serializable  {
+
+    private String description;
+    private String title , subTitle,author,coverUrl;
+    private String noOfPages, language,rating;
+    private String publisher, publishedDate;
+    private List<String> categories;
+    private String ratingsCount;
+
+    public String getRatingsCount() {
+        return ratingsCount;
+    }
+
+    public void setRatingsCount(String ratingsCount) {
+        this.ratingsCount = ratingsCount;
+    }
+
+    public List<String> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<String> categories) {
+        this.categories = categories;
+    }
+
+    public String getSubTitle() {
+        return subTitle;
+    }
+
+    public void setSubTitle(String subTitle) {
+        this.subTitle = subTitle;
+    }
+
+    public String getNoOfPages() {
+        return noOfPages;
+    }
+
+    public void setNoOfPages(String noOfPages) {
+        this.noOfPages = noOfPages;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
+    public String getPublishedDate() {
+        return publishedDate;
+    }
+
+    public void setPublishedDate(String publishedDate) {
+        this.publishedDate = publishedDate;
+    }
 
     public String getTitle() {
         return title;
@@ -26,5 +98,14 @@ public class DataModel {
 
     public void setCoverUrl(String coverUrl) {
         this.coverUrl = coverUrl;
+    }
+
+    public String getDescription() {
+
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
