@@ -1,4 +1,4 @@
-package com.aspark.allbooks;
+package com.aspark.allbooks.Activity;
 
 import static android.content.ContentValues.TAG;
 
@@ -20,6 +20,7 @@ import android.widget.EditText;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.aspark.allbooks.R;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
 import com.google.android.gms.auth.api.identity.BeginSignInResult;
 import com.google.android.gms.auth.api.identity.Identity;
@@ -36,8 +37,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-
-import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
 

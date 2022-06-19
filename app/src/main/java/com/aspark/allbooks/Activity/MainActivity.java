@@ -1,4 +1,4 @@
-package com.aspark.allbooks;
+package com.aspark.allbooks.Activity;
 
 import static android.content.ContentValues.TAG;
 
@@ -13,6 +13,12 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import com.aspark.allbooks.Fragment.AccountFrag;
+import com.aspark.allbooks.Fragment.BookshelfFrag;
+import com.aspark.allbooks.Fragment.HomeFrag;
+import com.aspark.allbooks.Fragment.SearchFrag;
+import com.aspark.allbooks.Network.NetworkRequest;
+import com.aspark.allbooks.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 

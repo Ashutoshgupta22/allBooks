@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".BookDetail">
+    tools:context=".Activity.BookDetailActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -233,7 +233,7 @@
                         android:id="@+id/PUBLISHED_DATE_VIEW"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Published Date"
+                        android:text="Published"
                         android:textSize="17sp"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="15dp"
@@ -298,6 +298,28 @@
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
                 android:layout_below="@+id/FROM_AUTHOR"/>
+
+
+            <TextView
+                android:id="@+id/YOU_MAY_LIKE"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fromAuthorRecyclerView"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="30dp"
+                android:text="You may like"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/youMayLikeRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:layout_below="@+id/YOU_MAY_LIKE"/>
+
 
 
         </RelativeLayout>

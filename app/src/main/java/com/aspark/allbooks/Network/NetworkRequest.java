@@ -1,10 +1,10 @@
-package com.aspark.allbooks;
+package com.aspark.allbooks.Network;
 
 import static android.content.ContentValues.TAG;
 import static com.android.volley.Request.Method.GET;
 import static com.android.volley.Request.Method.POST;
-import static com.aspark.allbooks.BookshelfFrag.SHELF_REQ_CODE;
-import static com.aspark.allbooks.SearchFrag.SEARCH_REQ_CODE;
+import static com.aspark.allbooks.Fragment.BookshelfFrag.SHELF_REQ_CODE;
+import static com.aspark.allbooks.Fragment.SearchFrag.SEARCH_REQ_CODE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,6 +17,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.aspark.allbooks.DataModel;
+import com.aspark.allbooks.Adapter.SearchAdapter;
+import com.aspark.allbooks.Fragment.SearchFrag;
+import com.aspark.allbooks.Adapter.ShelfAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -88,11 +92,20 @@ public class NetworkRequest {
                     jsonArray = response.getJSONArray("items");
                     booksDataList = new ArrayList<>();
 
+
                     for(int i=0; i < jsonArray.length();++i) {
 
+                        DataModel dataModel = new DataModel();
+
+                        if (jsonArray.getJSONObject(i).has("id")) {
+
+                            String volumeId = jsonArray.getJSONObject(i).getString("id");
+                            dataModel.setVolumeId(volumeId);
+                        }
                         volumeInfo = jsonArray.getJSONObject(i).getJSONObject("volumeInfo");
 
-                        booksDataList.add(storeData(volumeInfo));
+                        booksDataList.add(storeData(volumeInfo, dataModel));
+                    }
 
                         Log.i("TAG", "onResponse: title "+booksDataList.get(0).getTitle());
 
@@ -100,7 +113,7 @@ public class NetworkRequest {
                         recyclerView.setAdapter(new SearchAdapter(context,booksDataList));
                         else if (REQ_CODE==SHELF_REQ_CODE)
                             recyclerView.setAdapter(new ShelfAdapter(context,booksDataList));
-                    }
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -123,9 +136,9 @@ public class NetworkRequest {
         return booksDataList;
     }
 
-    private DataModel storeData( JSONObject volumeInfo) throws JSONException {
+    private DataModel storeData( JSONObject volumeInfo,DataModel booksData) throws JSONException {
 
-        DataModel  booksData = new DataModel();
+
 
         booksData.setTitle(volumeInfo.getString("title"));
 
@@ -275,14 +288,23 @@ public class NetworkRequest {
                     jsonArray = response.getJSONArray("items");
                     shelfList = new ArrayList<>();
 
+
                     for(int i=0; i < jsonArray.length();++i) {
 
+                        DataModel dataModel = new DataModel();
+                        if (jsonArray.getJSONObject(i).has("id")) {
+
+                            String volumeId = jsonArray.getJSONObject(i).getString("id");
+                            dataModel.setVolumeId(volumeId);
+                        }
                         volumeInfo = jsonArray.getJSONObject(i).getJSONObject("volumeInfo");
 
-                        shelfList.add(storeData(volumeInfo));
-                        recyclerView.setAdapter(new ShelfAdapter(context,shelfList));
+                        shelfList.add(storeData(volumeInfo, dataModel));
 
                     }
+                        recyclerView.setAdapter(new ShelfAdapter(context,shelfList));
+
+
                 } catch (JSONException e) {
                     e.printStackTrace();}
             }
@@ -380,12 +402,21 @@ public class NetworkRequest {
 
                     for(int i=0; i < jsonArray.length();++i) {
 
+                        DataModel dataModel = new DataModel();
+
+
+                        if (jsonArray.getJSONObject(i).has("id")) {
+
+                            String volumeId = jsonArray.getJSONObject(i).getString("id");
+                            dataModel.setVolumeId(volumeId);
+                        }
                         volumeInfo = jsonArray.getJSONObject(i).getJSONObject("volumeInfo");
 
-                        fromAuthorList.add(storeData(volumeInfo));
+                        fromAuthorList.add(storeData(volumeInfo, dataModel));
+                    }
                         recyclerView.setAdapter(new ShelfAdapter(context,fromAuthorList));
 
-                    }
+
                 } catch (JSONException e) {
                     e.printStackTrace();}
 
@@ -401,6 +432,99 @@ public class NetworkRequest {
 
 
         requestQueue.add(objectRequest);
+
+    }
+
+    public void youMayLike(List<String> categories) {
+
+        List<DataModel> youMayLikeList = new ArrayList<>();
+
+        //TODO search and show all categories
+
+        String cUrl = "https://www.googleapis.com/books/v1/volumes?q=+subject:" +categories.get(0);
+
+        JsonObjectRequest objectRequest = new JsonObjectRequest(GET, cUrl, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONArray jsonArray ;
+                JSONObject volumeInfo;
+                try {
+                    jsonArray = response.getJSONArray("items");
+                    for(int i=0; i < jsonArray.length();++i) {
+
+                        DataModel dataModel = new DataModel();
+
+                        if (jsonArray.getJSONObject(i).has("id")) {
+
+                            String volumeId = jsonArray.getJSONObject(i).getString("id");
+                            dataModel.setVolumeId(volumeId);
+                        }
+
+                        volumeInfo = jsonArray.getJSONObject(i).getJSONObject("volumeInfo");
+
+                        youMayLikeList.add(storeData(volumeInfo, dataModel));
+                    }
+                        recyclerView.setAdapter(new ShelfAdapter(context,youMayLikeList));
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                 }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "Cant get you may like section "+error.getLocalizedMessage());
+
+            }
+        });
+
+
+        requestQueue.add(objectRequest);
+
+    }
+
+    public void postRecentlyViewed(String volumeId) {
+
+        String vUrl = "https://www.googleapis.com/books/v1/mylibrary/bookshelves/0/addVolume?volumeId="+ volumeId +"&key="+API_KEY;
+
+        JsonObjectRequest objectRequest = new JsonObjectRequest(POST, vUrl, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                Log.i(TAG, "Recent View Posted ");
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Log.i(TAG, "Could not post Recent Viewed "+ error.getLocalizedMessage());
+
+            }
+        } ){
+            @Override
+            public Map<String, String> getHeaders() {
+
+                SharedPreferences preferences = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
+
+                HashMap<String, String> header = new HashMap<>();
+
+
+                if (ACCESS_TOKEN==null)
+                    ACCESS_TOKEN = preferences.getString("access_token","");
+
+                header.put("Authorization","Bearer "+ACCESS_TOKEN);
+
+                Log.i(TAG, "onResponse: ACCESS_TOKEN "+ACCESS_TOKEN);
+                return header;
+            }
+        };
+
+
+        requestQueue.add(objectRequest);
+
 
     }
 }

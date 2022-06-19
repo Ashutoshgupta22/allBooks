@@ -1,8 +1,7 @@
-package com.aspark.allbooks;
+package com.aspark.allbooks.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +11,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aspark.allbooks.Activity.BookDetailActivity;
+import com.aspark.allbooks.DataModel;
+import com.aspark.allbooks.Network.NetworkRequest;
+import com.aspark.allbooks.R;
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
@@ -82,7 +84,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
                   DataModel  bookData = booksDataList.get(getAdapterPosition());
 
-                    Intent intent = new Intent(view.getContext(),BookDetail.class);
+                    Intent intent = new Intent(view.getContext(), BookDetailActivity.class);
 
                     // to pass object of a class type , that class  should implement serializable.
                     intent.putExtra("bookData",bookData);

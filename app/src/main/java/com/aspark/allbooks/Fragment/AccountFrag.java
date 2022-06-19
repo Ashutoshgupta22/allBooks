@@ -1,4 +1,4 @@
-package com.aspark.allbooks;
+package com.aspark.allbooks.Fragment;
 
 import static android.content.ContentValues.TAG;
 
@@ -8,17 +8,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.aspark.allbooks.Adapter.AccountAdapter;
+import com.aspark.allbooks.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class AccountFrag extends Fragment {
     Button signOutBtn;
-
+    RecyclerView account_RV;
+    ImageView profilePic;
 
     public AccountFrag() {
     }
@@ -39,6 +45,16 @@ public class AccountFrag extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         signOutBtn= view.findViewById(R.id.signOutBtn);
+        account_RV = view.findViewById(R.id.account_RV);
+        profilePic = view.findViewById(R.id.profilePicAccount);
+
+        profilePic.setBackgroundResource(R.drawable.profile_background);
+        profilePic.setImageResource(R.drawable.logo);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext(),LinearLayoutManager.VERTICAL,false);
+        account_RV.setLayoutManager(layoutManager);
+        account_RV.setAdapter(new AccountAdapter());
+
+
 
         signOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override

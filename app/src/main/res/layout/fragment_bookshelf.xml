@@ -16,12 +16,12 @@
             android:id="@+id/bookshelfTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bookshelf"
-            android:textSize="30sp"
-            android:fontFamily="@font/work_sans_semibold"
-            android:textColor="@color/black"
+            android:layout_marginStart="18dp"
             android:layout_marginTop="18dp"
-            android:layout_marginStart="18dp"/>
+            android:fontFamily="@font/work_sans_semibold"
+            android:text="Bookshelf"
+            android:textColor="@color/black"
+            android:textSize="30sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/shelfRecyclerView"

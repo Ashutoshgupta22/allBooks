@@ -1,4 +1,4 @@
-package com.aspark.allbooks;
+package com.aspark.allbooks.Adapter;
 
 
 
@@ -12,11 +12,12 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aspark.allbooks.Activity.BookDetailActivity;
+import com.aspark.allbooks.DataModel;
+import com.aspark.allbooks.R;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.zip.Inflater;
 
 public class ShelfAdapter extends RecyclerView.Adapter<ShelfAdapter.ViewHolder> {
 
@@ -79,7 +80,7 @@ public class ShelfAdapter extends RecyclerView.Adapter<ShelfAdapter.ViewHolder> 
         public void onClick(View view) {
 
             DataModel bookData = booksDataList.get(getAdapterPosition());
-            Intent intent = new Intent(context,BookDetail.class);
+            Intent intent = new Intent(context, BookDetailActivity.class);
             intent.putExtra("bookData",bookData);
             context.startActivity(intent);
 

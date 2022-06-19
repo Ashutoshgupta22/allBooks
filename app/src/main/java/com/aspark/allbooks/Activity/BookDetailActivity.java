@@ -1,27 +1,28 @@
-package com.aspark.allbooks;
+package com.aspark.allbooks.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.aspark.allbooks.DataModel;
+import com.aspark.allbooks.Network.NetworkRequest;
+import com.aspark.allbooks.R;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-public class BookDetail extends AppCompatActivity {
+public class BookDetailActivity extends AppCompatActivity {
 
     ImageView bookCover ;
     TextView descriptionView , authorView,titleView;
     TextView no_of_pagesView,languageView,ratingView;
     TextView publisherView ,publishedDateView, categoriesView;
     DataModel bookData;
-    RecyclerView fromAuthorRecyclerView;
+    RecyclerView fromAuthorRecyclerView ,youMayLikeRecyclerView;
 
 
     @Override
@@ -40,6 +41,7 @@ public class BookDetail extends AppCompatActivity {
         publishedDateView  = findViewById(R.id.publishedDateView);
         categoriesView = findViewById(R.id.categoriesView);
         fromAuthorRecyclerView = findViewById(R.id.fromAuthorRecyclerView);
+        youMayLikeRecyclerView = findViewById(R.id.youMayLikeRecyclerView);
 
         bookData = (DataModel) getIntent().getSerializableExtra("bookData");
 
@@ -55,6 +57,7 @@ public class BookDetail extends AppCompatActivity {
         String publisher = bookData.getPublisher();
         String publishedDate = bookData.getPublishedDate();
         List<String> categories = bookData.getCategories();
+        String volumeId = bookData.getVolumeId();
 
         Glide.with(getApplicationContext())
                 .asBitmap()
@@ -70,10 +73,21 @@ public class BookDetail extends AppCompatActivity {
         ratingView.setText(rating);
         publisherView.setText(publisher);
         publishedDateView.setText(publishedDate);
-        if (categories.size() !=0)
-            categoriesView.setText(categories.get(0));       //TODO display all categories.
-        else
+        if (categories.size() !=0) {
+            //TODO display all categories.
+            categoriesView.setText(categories.get(0));
+
+
+            LinearLayoutManager layoutManager2 =
+                    new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+            youMayLikeRecyclerView.setLayoutManager(layoutManager2);
+
+            NetworkRequest networkRequest2 = new NetworkRequest("",this,youMayLikeRecyclerView);
+            networkRequest2.youMayLike(categories);
+
+        }else {
             categoriesView.setText("Unknown");
+        }
 
        LinearLayoutManager layoutManager =
                 new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
@@ -82,6 +96,8 @@ public class BookDetail extends AppCompatActivity {
         NetworkRequest networkRequest = new NetworkRequest("",this,fromAuthorRecyclerView);
         networkRequest.fromAuthor(authorName );
 
+        if (volumeId != null)
+            networkRequest.postRecentlyViewed(volumeId);
 
     }
 }

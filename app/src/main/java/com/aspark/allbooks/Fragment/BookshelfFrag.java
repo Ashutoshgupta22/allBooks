@@ -1,4 +1,4 @@
-package com.aspark.allbooks;
+package com.aspark.allbooks.Fragment;
 
 import android.os.Bundle;
 
@@ -12,6 +12,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.aspark.allbooks.Network.NetworkRequest;
+import com.aspark.allbooks.R;
 
 public class BookshelfFrag extends Fragment {
     ScrollView shelfScrollView;

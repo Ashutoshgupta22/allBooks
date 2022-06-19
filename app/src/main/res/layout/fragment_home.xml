@@ -1,17 +1,219 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#8CF1F1F4">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="54dp"
+        tools:layout_editor_absoluteY="1dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+
+        <TextView
+        android:id="@+id/HEY"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hey"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="18dp"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
         android:id="@+id/userNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="UserName"
-        android:textSize="30sp"
-        android:textColor="@color/black"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/work_sans_semibold"
-        android:layout_marginTop="18dp"
-        android:layout_marginStart="18dp"/>
-</RelativeLayout>
+        android:text="UserName"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        app:layout_constraintTop_toBottomOf="@id/HEY"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/RECOMMENDED_FOR_YOU"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+       app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/userNameTextView"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:text="Recommended for you"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recommendedRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintTop_toBottomOf="@+id/RECOMMENDED_FOR_YOU"/>
+
+
+    <TextView
+        android:id="@+id/ROMANCE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recommendedRecyclerView"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:text="Romance"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/romanceRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ROMANCE"/>
+
+    <TextView
+        android:id="@+id/FANTASY"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/romanceRecyclerView"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:text="Fantasy"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fantasyRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/FANTASY"/>
+    <TextView
+        android:id="@+id/MYSTERY"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fantasyRecyclerView"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:text="Mystery"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mysteryRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/MYSTERY"/>
+
+
+            <TextView
+                android:id="@+id/HORROR"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/mysteryRecyclerView"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="30dp"
+                android:text="Horror &amp; Thriller"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/horrorRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/HORROR"/>
+
+            <TextView
+                android:id="@+id/BUSINESS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/horrorRecyclerView"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="30dp"
+                android:text="Business &amp; Economics"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/businessRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/BUSINESS"/>
+
+
+            <TextView
+        android:id="@+id/BIOGRAPHY"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/businessRecyclerView"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:text="Biography"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/biographyRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/BIOGRAPHY"/>
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

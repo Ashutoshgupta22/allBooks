@@ -1,4 +1,4 @@
-package com.aspark.allbooks;
+package com.aspark.allbooks.Fragment;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +14,10 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.aspark.allbooks.DataModel;
+import com.aspark.allbooks.Network.NetworkRequest;
+import com.aspark.allbooks.R;
 
 import java.util.ArrayList;
 import java.util.List;

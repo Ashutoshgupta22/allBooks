@@ -5,7 +5,7 @@ import java.util.List;
 
 public class DataModel implements Serializable  {
 
-    private String description;
+    private String description , volumeId, isbn10, isbn13;
     private String title , subTitle,author,coverUrl;
     private String noOfPages, language,rating;
     private String publisher, publishedDate;
@@ -107,5 +107,29 @@ public class DataModel implements Serializable  {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getVolumeId() {
+        return volumeId;
+    }
+
+    public void setVolumeId(String volumeId) {
+        this.volumeId = volumeId;
+    }
+
+    public String getIsbn10() {
+        return isbn10;
+    }
+
+    public void setIsbn10(String isbn10) {
+        this.isbn10 = isbn10;
+    }
+
+    public String getIsbn13() {
+        return isbn13;
+    }
+
+    public void setIsbn13(String isbn13) {
+        this.isbn13 = isbn13;
     }
 }
