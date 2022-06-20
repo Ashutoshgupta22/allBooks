@@ -61,7 +61,7 @@ public class HomeNetReq {
         });
     }
 
-    public void searchGenre(String genre ,RecyclerView recyclerView) {
+    public void searchGenre(String genre, RecyclerView recyclerView) {
 
         List<DataModel> genreList = new ArrayList<>();
 
@@ -92,7 +92,7 @@ public class HomeNetReq {
                         genreList.add(storeData(volumeInfo, dataModel));
                     }
                     recyclerView.setAdapter(new ShelfAdapter(context, genreList));
-
+//                    shimmerLayout.stopShimmer();
 
                 } catch (JSONException e) {
                     e.printStackTrace();

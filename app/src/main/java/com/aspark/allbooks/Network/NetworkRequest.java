@@ -3,8 +3,7 @@ package com.aspark.allbooks.Network;
 import static android.content.ContentValues.TAG;
 import static com.android.volley.Request.Method.GET;
 import static com.android.volley.Request.Method.POST;
-import static com.aspark.allbooks.Fragment.BookshelfFrag.SHELF_REQ_CODE;
-import static com.aspark.allbooks.Fragment.SearchFrag.SEARCH_REQ_CODE;
+
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -32,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 public class NetworkRequest {
-    String input;
+
     DataModel booksData;
     RecyclerView  recyclerView;
     List<DataModel> booksDataList;
@@ -50,8 +49,8 @@ public class NetworkRequest {
     public NetworkRequest() {
     }
 
-    public NetworkRequest(String input, Context context, RecyclerView recyclerView) {
-        this.input = input;
+    public NetworkRequest( Context context, RecyclerView recyclerView) {
+
         this.context = context;
         requestQueue = Volley.newRequestQueue(context);
         searchFragObj = new SearchFrag();
@@ -64,25 +63,13 @@ public class NetworkRequest {
 
     }
 
-    public List<DataModel> search(int REQ_CODE) {
+    public void search(String query) {
 
-        // checking if this method is called by SearchFrag or BookshelfFrag
-        if (REQ_CODE ==SEARCH_REQ_CODE) {
 
-            // called by SearchFrag
-            url = BASE_URI + "/volumes?q=" + input+"&maxResults=40&key="+API_KEY;
+            url = BASE_URI + "/volumes?q=" + query+"&maxResults=40&key="+API_KEY;
             Log.i("", "networkSearchRequest: "+url);
 
-        }else if (REQ_CODE == SHELF_REQ_CODE){
-
-            // TODO this will not work as no header is passed , and will have to fetch access token
-            // called by BookshelfFrag
-            url = BASE_URI + "/mylibrary/bookshelves/0/volumes?key="+API_KEY;
-            Log.i("", "networkShelfRequest: "+url);
-
-        }
-
-        JsonObjectRequest objectRequest = new JsonObjectRequest(url, new Response.Listener<JSONObject>() {
+            JsonObjectRequest objectRequest = new JsonObjectRequest(url, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 
@@ -109,11 +96,7 @@ public class NetworkRequest {
 
                         Log.i("TAG", "onResponse: title "+booksDataList.get(0).getTitle());
 
-                        if (REQ_CODE ==SEARCH_REQ_CODE)
                         recyclerView.setAdapter(new SearchAdapter(context,booksDataList));
-                        else if (REQ_CODE==SHELF_REQ_CODE)
-                            recyclerView.setAdapter(new ShelfAdapter(context,booksDataList));
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -133,7 +116,7 @@ public class NetworkRequest {
 
         requestQueue.add(objectRequest);
 
-        return booksDataList;
+
     }
 
     private DataModel storeData( JSONObject volumeInfo,DataModel booksData) throws JSONException {

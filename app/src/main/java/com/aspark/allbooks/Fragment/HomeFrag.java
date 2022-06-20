@@ -12,8 +12,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aspark.allbooks.Adapter.ShelfAdapter;
 import com.aspark.allbooks.Network.HomeNetReq;
 import com.aspark.allbooks.R;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -26,6 +28,7 @@ public class HomeFrag extends Fragment {
     RecyclerView romance_RV, recommended_RV ,horror_RV , biography_RV,fantasy_RV,mystery_RV,business_RV;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+    ShimmerFrameLayout shimmerLayout;
 
     public HomeFrag() {
 
@@ -54,7 +57,9 @@ public class HomeFrag extends Fragment {
         biography_RV = view.findViewById(R.id.biographyRecyclerView);
         business_RV = view.findViewById(R.id.businessRecyclerView);
         mystery_RV = view.findViewById(R.id.mysteryRecyclerView);
-
+//        shimmerLayout = view.findViewById(R.id.shimmerLayout);
+//
+//        shimmerLayout.startShimmer();       // starts shimmer effect
 
       if (currentUser!=null)
         userName = Objects.requireNonNull(currentUser.getDisplayName()).split(" ")[0];
@@ -65,23 +70,30 @@ public class HomeFrag extends Fragment {
         layoutManager = new LinearLayoutManager(view.getContext(),LinearLayoutManager.HORIZONTAL,false);
         recommended_RV.setLayoutManager(layoutManager);
 
+
         layoutManager = new LinearLayoutManager(view.getContext(),LinearLayoutManager.HORIZONTAL,false);
         romance_RV.setLayoutManager(layoutManager);
+        romance_RV.setAdapter(new ShelfAdapter(getContext(),null));
 
         layoutManager = new LinearLayoutManager(view.getContext(),LinearLayoutManager.HORIZONTAL,false);
         fantasy_RV.setLayoutManager(layoutManager);
+        fantasy_RV.setAdapter(new ShelfAdapter(getContext(),null));
 
         layoutManager = new LinearLayoutManager(view.getContext(),LinearLayoutManager.HORIZONTAL,false);
         mystery_RV.setLayoutManager(layoutManager);
+        mystery_RV.setAdapter(new ShelfAdapter(getContext(),null));
 
         layoutManager = new LinearLayoutManager(view.getContext(),LinearLayoutManager.HORIZONTAL,false);
         horror_RV.setLayoutManager(layoutManager);
+        horror_RV.setAdapter(new ShelfAdapter(getContext(),null));
 
         layoutManager = new LinearLayoutManager(view.getContext(),LinearLayoutManager.HORIZONTAL,false);
         business_RV.setLayoutManager(layoutManager);
+        business_RV.setAdapter(new ShelfAdapter(getContext(),null));
 
         layoutManager = new LinearLayoutManager(view.getContext(),LinearLayoutManager.HORIZONTAL,false);
         biography_RV.setLayoutManager(layoutManager);
+        biography_RV.setAdapter(new ShelfAdapter(getContext(),null));
 
         homeNetReq = new HomeNetReq(view.getContext());
 

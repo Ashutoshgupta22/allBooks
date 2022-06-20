@@ -21,7 +21,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
-            android:focusedByDefault="true"
             android:iconifiedByDefault="false"
             android:queryHint="Search for title, author, etc."
             tools:layout_editor_absoluteX="1dp"
@@ -31,25 +30,6 @@
         </SearchView>
 
     </androidx.cardview.widget.CardView>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/searchCardView"
-        android:contextClickable="true"
-        android:visibility="gone"
-        android:numColumns="2"
-        android:paddingStart="20dp"
-        android:paddingEnd="0dp"
-        android:scrollbarDefaultDelayBeforeFade="@integer/material_motion_duration_long_2"
-        android:scrollbarSize="5dp"
-        android:scrollbarThumbVertical="@android:color/darker_gray"
-        android:scrollbars="vertical"
-        android:textAlignment="center">
-
-    </androidx.recyclerview.widget.RecyclerView>
-
 
     <ScrollView
         android:id="@+id/recentlyViewedScrollView"
@@ -74,6 +54,7 @@
                 android:textSize="25sp" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recentlyViewed_RV"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="20dp"/>
@@ -82,24 +63,5 @@
 
 
     </ScrollView>
-
-    <!--    <androidx.cardview.widget.CardView-->
-<!--        android:id="@+id/recentSearchesCardView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="80dp"-->
-<!--        android:layout_below="@id/searchCardView"-->
-<!--        android:layout_marginStart="7dp"-->
-<!--        android:layout_marginTop="10dp"-->
-<!--        android:layout_marginEnd="7dp"-->
-<!--        app:cardCornerRadius="10dp">-->
-
-
-<!--        <TextView-->
-<!--            android:id="@+id/recentSearchTextView"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_margin="4dp"-->
-<!--            android:text="Recent Searches" />-->
-<!--    </androidx.cardview.widget.CardView>-->
 
 </RelativeLayout>

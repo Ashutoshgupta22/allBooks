@@ -16,6 +16,8 @@ import com.aspark.allbooks.Activity.BookDetailActivity;
 import com.aspark.allbooks.DataModel;
 import com.aspark.allbooks.R;
 import com.bumptech.glide.Glide;
+import com.facebook.shimmer.ShimmerDrawable;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.List;
 
@@ -23,6 +25,7 @@ public class ShelfAdapter extends RecyclerView.Adapter<ShelfAdapter.ViewHolder> 
 
     Context context;
     List<DataModel> booksDataList;
+
 
 
     public ShelfAdapter(Context context,List<DataModel> booksDataList ) {
@@ -37,8 +40,11 @@ public class ShelfAdapter extends RecyclerView.Adapter<ShelfAdapter.ViewHolder> 
     @Override
     public ShelfAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-
-        View view = LayoutInflater.from(context).inflate(R.layout.bookshelf_item,parent,false);
+        View view;
+     if (booksDataList ==null)
+     view = LayoutInflater.from(context).inflate(R.layout.data_placeholder_layout,parent,false);
+     else
+       view  = LayoutInflater.from(context).inflate(R.layout.bookshelf_item,parent,false);
 
         return new ViewHolder(view);
     }
@@ -46,13 +52,23 @@ public class ShelfAdapter extends RecyclerView.Adapter<ShelfAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ShelfAdapter.ViewHolder holder, int position) {
 
-        Glide.with(context)
-                .asBitmap()
-                .override(RecyclerView.LayoutParams.MATCH_PARENT)
-                .centerCrop()
-                .load(booksDataList.get(position).getCoverUrl())
-                .into(holder.shelfImageView);
+        if (booksDataList != null) {
+            Glide.with(context)
+                    .asBitmap()
+                    .override(RecyclerView.LayoutParams.MATCH_PARENT)
+                    .centerCrop()
+                    .load(booksDataList.get(position).getCoverUrl())
+                    .into(holder.shelfImageView);
 
+//            ShimmerDrawable shimmerDrawable = new ShimmerDrawable();
+//            shimmerDrawable.setShimmer(holder.shimmerFrameLayout);
+//           holder.shimmerFrameLayout.stopShimmer();
+//           holder.shimmerFrameLayout.setVisibility(View.GONE);
+
+        }
+
+//            holder.shimmerFrameLayout.setVisibility(View.VISIBLE);
+//            holder.shimmerFrameLayout.startShimmer();
 
 
     }
@@ -62,17 +78,20 @@ public class ShelfAdapter extends RecyclerView.Adapter<ShelfAdapter.ViewHolder> 
         if (booksDataList != null)
         return booksDataList.size();
         else
-            return 0;
+            return 10;
     }
 
     public  class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView shelfImageView;
+        ShimmerFrameLayout shimmerFrameLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             shelfImageView = itemView.findViewById(R.id.shelfCoverImageView);
+//            shimmerFrameLayout = itemView.findViewById(R.id.shimmerLayout);
 
+            if (booksDataList !=null)
             itemView.setOnClickListener(this);
         }
 
@@ -87,4 +106,6 @@ public class ShelfAdapter extends RecyclerView.Adapter<ShelfAdapter.ViewHolder> 
 
         }
     }
+
+
 }

@@ -20,7 +20,7 @@ public class BookshelfFrag extends Fragment {
     ScrollView shelfScrollView;
     NetworkRequest networkReq;
     RecyclerView shelfRecyclerView;
-    public static final int SHELF_REQ_CODE = 20;
+
 
     public BookshelfFrag() {
     }
@@ -49,7 +49,7 @@ public class BookshelfFrag extends Fragment {
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(),2);
         shelfRecyclerView.setLayoutManager(layoutManager);
 
-        networkReq = new NetworkRequest("",view.getContext(),shelfRecyclerView);
+        networkReq = new NetworkRequest(view.getContext(),shelfRecyclerView);
         networkReq.getAccountData();
 
     }

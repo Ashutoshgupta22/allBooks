@@ -82,7 +82,7 @@ public class BookDetailActivity extends AppCompatActivity {
                     new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
             youMayLikeRecyclerView.setLayoutManager(layoutManager2);
 
-            NetworkRequest networkRequest2 = new NetworkRequest("",this,youMayLikeRecyclerView);
+            NetworkRequest networkRequest2 = new NetworkRequest(this,youMayLikeRecyclerView);
             networkRequest2.youMayLike(categories);
 
         }else {
@@ -93,7 +93,7 @@ public class BookDetailActivity extends AppCompatActivity {
                 new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
         fromAuthorRecyclerView.setLayoutManager(layoutManager);
 
-        NetworkRequest networkRequest = new NetworkRequest("",this,fromAuthorRecyclerView);
+        NetworkRequest networkRequest = new NetworkRequest(this,fromAuthorRecyclerView);
         networkRequest.fromAuthor(authorName );
 
         if (volumeId != null)

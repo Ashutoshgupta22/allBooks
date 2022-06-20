@@ -5,12 +5,15 @@
 
     <application
         android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AllBooks"
-        android:dataExtractionRules="@xml/data_extraction_rules">
+        android:theme="@style/Theme.AllBooks">
+        <activity
+            android:name=".Activity.SearchActivity"
+            android:exported="true" />
         <activity
             android:name=".Activity.BookDetailActivity"
             android:exported="false" />
