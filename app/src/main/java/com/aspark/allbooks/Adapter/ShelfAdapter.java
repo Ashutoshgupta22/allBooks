@@ -26,14 +26,10 @@ public class ShelfAdapter extends RecyclerView.Adapter<ShelfAdapter.ViewHolder> 
     Context context;
     List<DataModel> booksDataList;
 
-
-
     public ShelfAdapter(Context context,List<DataModel> booksDataList ) {
 
         this.context = context;
         this.booksDataList = booksDataList;
-
-
     }
 
     @NonNull
@@ -59,18 +55,7 @@ public class ShelfAdapter extends RecyclerView.Adapter<ShelfAdapter.ViewHolder> 
                     .centerCrop()
                     .load(booksDataList.get(position).getCoverUrl())
                     .into(holder.shelfImageView);
-
-//            ShimmerDrawable shimmerDrawable = new ShimmerDrawable();
-//            shimmerDrawable.setShimmer(holder.shimmerFrameLayout);
-//           holder.shimmerFrameLayout.stopShimmer();
-//           holder.shimmerFrameLayout.setVisibility(View.GONE);
-
         }
-
-//            holder.shimmerFrameLayout.setVisibility(View.VISIBLE);
-//            holder.shimmerFrameLayout.startShimmer();
-
-
     }
 
     @Override
@@ -84,12 +69,10 @@ public class ShelfAdapter extends RecyclerView.Adapter<ShelfAdapter.ViewHolder> 
     public  class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView shelfImageView;
-        ShimmerFrameLayout shimmerFrameLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             shelfImageView = itemView.findViewById(R.id.shelfCoverImageView);
-//            shimmerFrameLayout = itemView.findViewById(R.id.shimmerLayout);
 
             if (booksDataList !=null)
             itemView.setOnClickListener(this);
@@ -102,10 +85,6 @@ public class ShelfAdapter extends RecyclerView.Adapter<ShelfAdapter.ViewHolder> 
             Intent intent = new Intent(context, BookDetailActivity.class);
             intent.putExtra("bookData",bookData);
             context.startActivity(intent);
-
-
         }
     }
-
-
 }

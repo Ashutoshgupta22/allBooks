@@ -4,25 +4,31 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aspark.allbooks.DataModel;
+import com.aspark.allbooks.FireStore;
 import com.aspark.allbooks.Network.NetworkRequest;
 import com.aspark.allbooks.R;
 import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
 public class BookDetailActivity extends AppCompatActivity {
 
+    String TAG = "BookDetailActivity";
     ImageView bookCover ;
     TextView descriptionView , authorView,titleView;
     TextView no_of_pagesView,languageView,ratingView;
     TextView publisherView ,publishedDateView, categoriesView;
     DataModel bookData;
     RecyclerView fromAuthorRecyclerView ,youMayLikeRecyclerView;
+    String volumeId;
 
 
     @Override
@@ -57,7 +63,7 @@ public class BookDetailActivity extends AppCompatActivity {
         String publisher = bookData.getPublisher();
         String publishedDate = bookData.getPublishedDate();
         List<String> categories = bookData.getCategories();
-        String volumeId = bookData.getVolumeId();
+         volumeId = bookData.getVolumeId();
 
         Glide.with(getApplicationContext())
                 .asBitmap()
@@ -96,8 +102,17 @@ public class BookDetailActivity extends AppCompatActivity {
         NetworkRequest networkRequest = new NetworkRequest(this,fromAuthorRecyclerView);
         networkRequest.fromAuthor(authorName );
 
-        if (volumeId != null)
-            networkRequest.postRecentlyViewed(volumeId);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        Log.i(TAG, "onPause: ");
+
+        SharedPreferences preferences = getSharedPreferences(getPackageName(),MODE_PRIVATE);
+        FireStore fireStore = new FireStore(getApplicationContext());
+        fireStore.addRecentlyViewed(preferences.getString("userId",null),volumeId);
 
     }
 }

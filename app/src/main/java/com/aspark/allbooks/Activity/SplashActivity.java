@@ -16,24 +16,18 @@ import com.google.firebase.auth.FirebaseUser;
 public class SplashActivity extends AppCompatActivity {
 
     HomeNetReq homeNetReq;
-    RecyclerView horror_RV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         homeNetReq = new HomeNetReq(getApplicationContext());
 
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
-
-
         SharedPreferences preferences = getSharedPreferences(getPackageName(),MODE_PRIVATE);
         String refreshToken = preferences.getString("refresh_token",null);
-
-
 
         // this method delays the calling of mainActivity
         new Handler().postDelayed(new Runnable() {
@@ -47,27 +41,16 @@ public class SplashActivity extends AppCompatActivity {
                 if (currentUser != null && refreshToken !=null) {
 
                     Log.i("splash", "run: WELCOME BACK :)");
-
-
                     intent = new Intent(SplashActivity.this, MainActivity.class);
-
 
                 } else {
 
                     Log.i("splash", "run: seems like its your first time ;)");
-
                     intent = new Intent(SplashActivity.this, LoginActivity.class);
-
                 }
-
                 startActivity(intent);
                 finish();
-
             }
-        },1500);
-
-
+        },1000);
     }
-
-
 }

@@ -95,19 +95,19 @@
         app:layout_constraintTop_toBottomOf="@id/ROMANCE"/>
 
     <TextView
-        android:id="@+id/FANTASY"
+        android:id="@+id/FICTION"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/romanceRecyclerView"
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
-        android:text="Fantasy"
+        android:text="Fiction"
         android:textColor="@color/black"
         android:textSize="20sp" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fantasyRecyclerView"
+        android:id="@+id/fictionRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -115,13 +115,13 @@
         android:paddingEnd="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/FANTASY"/>
+        app:layout_constraintTop_toBottomOf="@+id/FICTION"/>
     <TextView
         android:id="@+id/MYSTERY"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fantasyRecyclerView"
+        app:layout_constraintTop_toBottomOf="@id/fictionRecyclerView"
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
         android:text="Mystery"

@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.aspark.allbooks.Adapter.ShelfAdapter;
 import com.aspark.allbooks.Network.HomeNetReq;
 import com.aspark.allbooks.R;
-import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -25,10 +24,9 @@ public class HomeFrag extends Fragment {
     String userName;
     TextView userNameTextView;
     HomeNetReq homeNetReq;
-    RecyclerView romance_RV, recommended_RV ,horror_RV , biography_RV,fantasy_RV,mystery_RV,business_RV;
+    RecyclerView romance_RV, recommended_RV ,horror_RV , biography_RV, fiction_RV,mystery_RV,business_RV;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-    ShimmerFrameLayout shimmerLayout;
 
     public HomeFrag() {
 
@@ -53,13 +51,10 @@ public class HomeFrag extends Fragment {
         romance_RV = view.findViewById(R.id.romanceRecyclerView);
         recommended_RV = view.findViewById(R.id.recommendedRecyclerView);
         horror_RV = view.findViewById(R.id.horrorRecyclerView);
-        fantasy_RV = view.findViewById(R.id.fantasyRecyclerView);
+        fiction_RV = view.findViewById(R.id.fictionRecyclerView);
         biography_RV = view.findViewById(R.id.biographyRecyclerView);
         business_RV = view.findViewById(R.id.businessRecyclerView);
         mystery_RV = view.findViewById(R.id.mysteryRecyclerView);
-//        shimmerLayout = view.findViewById(R.id.shimmerLayout);
-//
-//        shimmerLayout.startShimmer();       // starts shimmer effect
 
       if (currentUser!=null)
         userName = Objects.requireNonNull(currentUser.getDisplayName()).split(" ")[0];
@@ -69,6 +64,7 @@ public class HomeFrag extends Fragment {
 
         layoutManager = new LinearLayoutManager(view.getContext(),LinearLayoutManager.HORIZONTAL,false);
         recommended_RV.setLayoutManager(layoutManager);
+        recommended_RV.setAdapter(new ShelfAdapter(view.getContext(),null));
 
 
         layoutManager = new LinearLayoutManager(view.getContext(),LinearLayoutManager.HORIZONTAL,false);
@@ -76,8 +72,8 @@ public class HomeFrag extends Fragment {
         romance_RV.setAdapter(new ShelfAdapter(getContext(),null));
 
         layoutManager = new LinearLayoutManager(view.getContext(),LinearLayoutManager.HORIZONTAL,false);
-        fantasy_RV.setLayoutManager(layoutManager);
-        fantasy_RV.setAdapter(new ShelfAdapter(getContext(),null));
+        fiction_RV.setLayoutManager(layoutManager);
+        fiction_RV.setAdapter(new ShelfAdapter(getContext(),null));
 
         layoutManager = new LinearLayoutManager(view.getContext(),LinearLayoutManager.HORIZONTAL,false);
         mystery_RV.setLayoutManager(layoutManager);
@@ -97,8 +93,9 @@ public class HomeFrag extends Fragment {
 
         homeNetReq = new HomeNetReq(view.getContext());
 
+        homeNetReq.getRecommendedBooks(recommended_RV);
         homeNetReq.searchGenre("romance",romance_RV);
-        homeNetReq.searchGenre("fantasy",fantasy_RV);
+        homeNetReq.searchGenre("fiction", fiction_RV);
         homeNetReq.searchGenre("mystery",mystery_RV);
         homeNetReq.searchGenre("horror thriller",horror_RV);
         homeNetReq.searchGenre("business economics",business_RV);

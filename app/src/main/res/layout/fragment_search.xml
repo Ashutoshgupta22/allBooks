@@ -16,18 +16,40 @@
         android:elevation="6dp"
         app:cardCornerRadius="7dp">
 
-        <SearchView
-            android:id="@+id/searchView"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:iconifiedByDefault="false"
-            android:queryHint="Search for title, author, etc."
-            tools:layout_editor_absoluteX="1dp"
-            tools:layout_editor_absoluteY="1dp"
-            android:queryBackground="@android:color/transparent">
+            android:layout_height="match_parent" >
 
-        </SearchView>
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/searchView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingStart="8dp"
+                android:paddingEnd="0dp"
+                app:iconifiedByDefault="true"
+                android:focusedByDefault="false"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@android:color/transparent"
+                tools:layout_editor_absoluteX="1dp"
+                tools:layout_editor_absoluteY="1dp"
+                android:queryBackground="@android:color/transparent">
+
+            </androidx.appcompat.widget.SearchView>
+
+            <TextView
+                android:id="@+id/queryHintTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Search for title, author etc."
+                android:textSize="18sp"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/searchView"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
 
@@ -57,7 +79,7 @@
                 android:id="@+id/recentlyViewed_RV"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp" />
 
         </LinearLayout>
 

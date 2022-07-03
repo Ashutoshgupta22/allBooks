@@ -16,6 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.aspark.allbooks.Adapter.RecentlyViewedAdapter;
 import com.aspark.allbooks.DataModel;
 import com.aspark.allbooks.Adapter.SearchAdapter;
 import com.aspark.allbooks.Fragment.SearchFrag;
@@ -26,6 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -191,12 +193,7 @@ public class NetworkRequest {
                 catList.add(categories.getString(i));
         }
         booksData.setCategories(catList);
-
-
-
         return booksData;
-
-
     }
 
     public void getAccessToken(String authCode) {
@@ -323,12 +320,8 @@ public class NetworkRequest {
                     Log.i(TAG, "onResponse: ACCESS_TOKEN "+ACCESS_TOKEN);
                     return header;
             }
-
         } ;
-
         requestQueue.add(objectRequest);
-
-
     }
 
     public void refreshToken(){
@@ -352,8 +345,6 @@ public class NetworkRequest {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -387,7 +378,6 @@ public class NetworkRequest {
 
                         DataModel dataModel = new DataModel();
 
-
                         if (jsonArray.getJSONObject(i).has("id")) {
 
                             String volumeId = jsonArray.getJSONObject(i).getString("id");
@@ -399,23 +389,18 @@ public class NetworkRequest {
                     }
                         recyclerView.setAdapter(new ShelfAdapter(context,fromAuthorList));
 
-
                 } catch (JSONException e) {
-                    e.printStackTrace();}
-
-
+                    e.printStackTrace();
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i(TAG, "from Author Error "+error.getMessage());
-
             }
         });
 
-
         requestQueue.add(objectRequest);
-
     }
 
     public void youMayLike(List<String> categories) {
@@ -450,7 +435,6 @@ public class NetworkRequest {
                     }
                         recyclerView.setAdapter(new ShelfAdapter(context,youMayLikeList));
 
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                  }
@@ -459,18 +443,14 @@ public class NetworkRequest {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "Cant get you may like section "+error.getLocalizedMessage());
-
             }
         });
-
-
         requestQueue.add(objectRequest);
-
     }
 
     public void postRecentlyViewed(String volumeId) {
 
-        String vUrl = "https://www.googleapis.com/books/v1/mylibrary/bookshelves/0/addVolume?volumeId="+ volumeId +"&key="+API_KEY;
+        String vUrl = "https://www.googleapis.com/books/v1/mylibrary/bookshelves/6/addVolume?volumeId="+ volumeId +"&key="+API_KEY;
 
         JsonObjectRequest objectRequest = new JsonObjectRequest(POST, vUrl, null, new Response.Listener<JSONObject>() {
             @Override
@@ -509,6 +489,49 @@ public class NetworkRequest {
         requestQueue.add(objectRequest);
 
 
+    }
+
+    public void showRecentlyViewed(RecyclerView recentlyViewed_rv, ArrayList<String> list) {
+
+        ArrayList<DataModel> recentlyViewedList = new ArrayList<>();
+
+        for ( String volumeId: list) {
+
+            url = "https://www.googleapis.com/books/v1/volumes/" + volumeId + "?key=" + API_KEY;
+
+            JsonObjectRequest objectRequest = new JsonObjectRequest(GET, url, null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+
+                    JSONObject volumeInfo;
+                    try {
+                        booksDataList = new ArrayList<>();
+                        DataModel dataModel = new DataModel();
+
+                        dataModel.setVolumeId(volumeId);
+
+                        volumeInfo = response.getJSONObject("volumeInfo");
+
+                        recentlyViewedList.add(storeData(volumeInfo, dataModel));
+                        Log.i("TAG", "recentlyViewed list "+recentlyViewedList.size());
+                        recentlyViewed_rv.setAdapter(new RecentlyViewedAdapter(recentlyViewedList));
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                    Log.e(TAG, "RecentlyViewed VolumeId ERROR " +error.getMessage() );
+                }
+            });
+
+            requestQueue.add(objectRequest);
+        }
+        Log.i(TAG, "showRecentlyViewed: setting Adapter from Network "+recentlyViewedList.size());
+//        recentlyViewed_rv.setAdapter(new RecentlyViewedAdapter(recentlyViewedList));
     }
 }
 

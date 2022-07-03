@@ -20,6 +20,7 @@ import android.widget.EditText;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.aspark.allbooks.FireStore;
 import com.aspark.allbooks.R;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
 import com.google.android.gms.auth.api.identity.BeginSignInResult;
@@ -39,6 +40,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity {
+
 
     Button loginBtn;
     private SignInClient oneTapClient, oneTapClientSignUp;
@@ -69,18 +71,9 @@ public class LoginActivity extends AppCompatActivity {
                 Log.i(TAG, "onClick: editText clicked");
 
                 showOneTapSignIn();
-
-
             }
         });
-
-
-
-
     }
-
-
-
 
     private void showOneTapSignIn() {
         //setting up one tap sign in with google.
@@ -269,6 +262,17 @@ public class LoginActivity extends AppCompatActivity {
                                 if (preferences.getString("refresh_token", null) == null) {
 
                                     Log.i(TAG, "Seems like its your first time ;)");
+
+                                    String  userId =currentUser.getDisplayName()+idToken;
+                                    SharedPreferences preferences1 = getSharedPreferences(getPackageName(),MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = preferences1.edit();
+                                    editor.putString("userId",userId);
+                                    editor.apply();
+
+                                    FireStore fireStore = new FireStore(getApplicationContext());
+                                    fireStore.createCollections(userId);
+                                    fireStore.addUser(userId,currentUser.getEmail());
+
                                     getAuthCode();
                                 } else {
                                     Log.i(TAG, "Hey! you are back :)");
@@ -277,22 +281,12 @@ public class LoginActivity extends AppCompatActivity {
                                     intent.putExtra("UserName", currentUser.getDisplayName());
                                     startActivity(intent);
                                     finish();
-
                                 }
-
-
-//                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//                                intent.putExtra("UserName", currentUser.getDisplayName());
-//                                startActivity(intent);
-//                                finish();
                             }
 
                         } else {
-
                             Log.i(TAG, "SignInFailed " + task.getException());
-
                         }
-
                     }
                 });
 
@@ -301,7 +295,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void getAuthCode() {
 
-        Log.i(TAG, "getAuthCode: Creating custom  tab");
+//        Log.i(TAG, "getAuthCode: Creating custom  tab");
 
         String url = "https://accounts.google.com/o/oauth2/v2/auth?" +
                 "scope=https://www.googleapis.com/auth/books&" +
