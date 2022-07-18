@@ -1,5 +1,6 @@
 package com.aspark.allbooks.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -7,19 +8,27 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aspark.allbooks.DataModel;
 import com.aspark.allbooks.FireStore;
 import com.aspark.allbooks.Network.NetworkRequest;
 import com.aspark.allbooks.R;
 import com.bumptech.glide.Glide;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
-public class BookDetailActivity extends AppCompatActivity {
+public class BookDetailActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
     String TAG = "BookDetailActivity";
     ImageView bookCover ;
@@ -29,6 +38,8 @@ public class BookDetailActivity extends AppCompatActivity {
     DataModel bookData;
     RecyclerView fromAuthorRecyclerView ,youMayLikeRecyclerView;
     String volumeId;
+
+    FloatingActionButton floatingActionButton;
 
 
     @Override
@@ -48,6 +59,7 @@ public class BookDetailActivity extends AppCompatActivity {
         categoriesView = findViewById(R.id.categoriesView);
         fromAuthorRecyclerView = findViewById(R.id.fromAuthorRecyclerView);
         youMayLikeRecyclerView = findViewById(R.id.youMayLikeRecyclerView);
+        floatingActionButton = findViewById(R.id.floatingActionButton);
 
         bookData = (DataModel) getIntent().getSerializableExtra("bookData");
 
@@ -102,7 +114,24 @@ public class BookDetailActivity extends AppCompatActivity {
         NetworkRequest networkRequest = new NetworkRequest(this,fromAuthorRecyclerView);
         networkRequest.fromAuthor(authorName );
 
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                showPopUp(view);
+            }
+        });
     }
+
+    private void showPopUp(View view) {
+
+        PopupMenu popupMenu = new PopupMenu(BookDetailActivity.this,view);
+        popupMenu.setOnMenuItemClickListener(this);
+        popupMenu.getMenuInflater().inflate(R.menu.fab_menu,popupMenu.getMenu());
+        popupMenu.show();
+
+    }
+
 
     @Override
     protected void onPause() {
@@ -113,6 +142,42 @@ public class BookDetailActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences(getPackageName(),MODE_PRIVATE);
         FireStore fireStore = new FireStore(getApplicationContext());
         fireStore.addRecentlyViewed(preferences.getString("userId",null),volumeId);
+
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem)  {
+
+        int  id = menuItem.getItemId();
+        FireStore fireStore = new FireStore(getApplicationContext());
+
+        if (id == R.id.to_read) {
+
+            fireStore.addToBookshelf(volumeId,"To Read");
+            Toast.makeText(this, "Added to To Read", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        else if (id == R.id.favourites) {
+
+            fireStore.addToBookshelf(volumeId,"Favorites");
+            Toast.makeText(this, "Added to Favorites", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        else if (id == R.id.bookshelf_1) {
+
+            fireStore.addToBookshelf(volumeId,"Bookshelf 1");
+            Toast.makeText(this, "Added to Bookshelf 1", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        else if (id == R.id.bookshelf_2) {
+
+            fireStore.addToBookshelf(volumeId,"Bookshelf 2");
+            Toast.makeText(this, "Added to Bookshelf 2", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        else
+            return false;
+
 
     }
 }

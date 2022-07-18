@@ -52,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText loginEditText;
     RequestQueue requestQueue;
     Account[] account;
+    public static String USER_ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -263,15 +264,15 @@ public class LoginActivity extends AppCompatActivity {
 
                                     Log.i(TAG, "Seems like its your first time ;)");
 
-                                    String  userId =currentUser.getDisplayName()+idToken;
+                                   USER_ID =currentUser.getDisplayName()+idToken;
                                     SharedPreferences preferences1 = getSharedPreferences(getPackageName(),MODE_PRIVATE);
                                     SharedPreferences.Editor editor = preferences1.edit();
-                                    editor.putString("userId",userId);
+                                    editor.putString("userId",USER_ID);
                                     editor.apply();
 
                                     FireStore fireStore = new FireStore(getApplicationContext());
-                                    fireStore.createCollections(userId);
-                                    fireStore.addUser(userId,currentUser.getEmail());
+                                   // fireStore.createCollections(userId);
+                                    fireStore.addUser(USER_ID,currentUser.getEmail());
 
                                     getAuthCode();
                                 } else {

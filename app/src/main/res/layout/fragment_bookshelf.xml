@@ -24,13 +24,19 @@
             android:textSize="30sp" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/shelfRecyclerView"
+            android:id="@+id/bookshelfName_RV"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/bookshelfTextView"
+            android:layout_marginTop="18dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/shelfRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bookshelfName_RV"
             android:layout_marginTop="30dp"
             android:padding="10dp"/>
-
 
     </RelativeLayout>
     </ScrollView>

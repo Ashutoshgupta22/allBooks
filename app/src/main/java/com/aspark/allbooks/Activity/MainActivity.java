@@ -2,11 +2,14 @@ package com.aspark.allbooks.Activity;
 
 import static android.content.ContentValues.TAG;
 
+import static com.aspark.allbooks.Activity.LoginActivity.USER_ID;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         frameLayout = findViewById(R.id.frameLayout);
+
+        SharedPreferences preferences = getSharedPreferences(getPackageName(),MODE_PRIVATE);
+        USER_ID = preferences.getString("userId",null);
 
         NavigationBarView.OnItemSelectedListener onItemSelectedListener = new NavigationBarView.OnItemSelectedListener() {
 

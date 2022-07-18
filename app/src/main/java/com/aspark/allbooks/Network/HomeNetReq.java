@@ -240,7 +240,15 @@ public class HomeNetReq {
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                Log.i(TAG, "onErrorResponse: Could not get recommended list "+error.getMessage());
+                Log.d(TAG, "onErrorResponse: Could not get recommended list "+error.getMessage());
+
+                int errorCode = error.networkResponse.statusCode;
+                if (errorCode == 401) {
+
+                    NetworkRequest networkReq = new NetworkRequest(context);
+                            networkReq.getAccountData();
+                }
+
 
             }
         }){

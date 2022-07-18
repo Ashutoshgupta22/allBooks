@@ -1,12 +1,16 @@
 package com.aspark.allbooks;
 
+import static com.aspark.allbooks.Activity.LoginActivity.USER_ID;
+
 import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aspark.allbooks.Adapter.ShelfAdapter;
 import com.aspark.allbooks.Fragment.SearchFrag;
+import com.aspark.allbooks.Network.NetworkRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -16,10 +20,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.model.Document;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FireStore {
@@ -39,7 +45,7 @@ public class FireStore {
         users.put("refresh_token","abcdefghijklmnopqrstuvwxyz");
 
         db.collection("users").document(userId)
-                .set(users)
+                .set(users,SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
@@ -131,31 +137,71 @@ public class FireStore {
 
         return recentlyViewedList;
     }
+    
+    public void addToBookshelf(String volumeId, String bookshelf) {
 
-    public void createCollections(String userId) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("volume_"+volumeId,volumeId);
 
-        Map<String,Object> first = new HashMap<>();
-        first.put("first","");
-
-        db.collection("recently_viewed").document(userId)
-                .set(first)
+        db.collection("Bookshelves").document(USER_ID).collection("Bookshelf").document(bookshelf)
+                .set(map,SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
 
-                        Log.d(TAG, " recently_viewed created");
+                        Log.d(TAG, "onSuccess: Book added to "+bookshelf);
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, " recently_viewed NOT  created");
 
+                        Log.d(TAG, "onFailure: Book NOT added "+e.getMessage());
                     }
                 });
     }
 
-    public void getRefreshToken(String userId) {
+    public void getBookshelf(String bookshelf, RecyclerView bookshelf_RV ) {
 
+        List<String> bookshelfList = new ArrayList<>();
+        
+        db.collection("Bookshelves").document(USER_ID).collection("Bookshelf").document(bookshelf)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        
+                        if (task.isSuccessful()){
+                            DocumentSnapshot snapshot = task.getResult();
+                            
+                            if (snapshot.exists()){
+                                Log.d(TAG, "onComplete: GOT the books in "+bookshelf);
+                                
+                                Map<String,Object> map = snapshot.getData();
+                                if (map !=null) {
+
+                                    for (Map.Entry<String,Object> entry : map.entrySet()) {
+                                        
+                                        bookshelfList.add(entry.getValue().toString());
+                                    }
+                                    NetworkRequest networkRequest = new NetworkRequest(context);
+                                    networkRequest.getBookshelf(bookshelf_RV, bookshelfList);
+
+                                }
+                            }
+                            else
+                                Log.i(TAG, "onComplete: document does NOT exist");
+                        }
+                        else
+                            Log.i(TAG, "onComplete: task is unsuccessful");
+                        
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                        Log.i(TAG, "onFailure: Could NOT get books from bookshelf "+ bookshelf+" Error "+e.getMessage());
+                    }
+                });
+        
     }
 }

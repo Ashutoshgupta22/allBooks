@@ -11,16 +11,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aspark.allbooks.Adapter.bookshelfNameAdapter;
+import com.aspark.allbooks.FireStore;
 import com.aspark.allbooks.Network.NetworkRequest;
 import com.aspark.allbooks.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BookshelfFrag extends Fragment {
     ScrollView shelfScrollView;
-    NetworkRequest networkReq;
-    RecyclerView shelfRecyclerView;
-
+    RecyclerView shelfRecyclerView, bookshelfName_RV;
+    List<String> bookshelfNameList = new ArrayList<>();
+    FireStore fireStore;
 
     public BookshelfFrag() {
     }
@@ -42,15 +48,24 @@ public class BookshelfFrag extends Fragment {
 
         shelfScrollView = view.findViewById(R.id.shelfScrollView);
         shelfRecyclerView = view.findViewById(R.id.shelfRecyclerView);
+        bookshelfName_RV = view.findViewById(R.id.bookshelfName_RV);
 
-//        Log.i(TAG, "onViewCreated: called networkRequest for user bookshelf data");
-//        networkReq = new networkRequest("",getContext(),shelfRecyclerView);
-//        networkReq.search(SHELF_REQ_CODE);
+        fireStore = new FireStore(view.getContext());
+
+        bookshelfNameList.add("Favorites");
+        bookshelfNameList.add("To Read");
+        bookshelfNameList.add("Bookshelf 1");
+        bookshelfNameList.add("Bookshelf 2");
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
+        bookshelfName_RV.setLayoutManager(linearLayoutManager);
+
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(),2);
         shelfRecyclerView.setLayoutManager(layoutManager);
+        fireStore.getBookshelf("Favorites",shelfRecyclerView);
 
-        networkReq = new NetworkRequest(view.getContext(),shelfRecyclerView);
-        networkReq.getAccountData();
+
+        bookshelfName_RV.setAdapter(new bookshelfNameAdapter(bookshelfNameList,shelfRecyclerView));
 
     }
 }
