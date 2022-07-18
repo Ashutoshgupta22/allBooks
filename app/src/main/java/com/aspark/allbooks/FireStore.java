@@ -164,7 +164,8 @@ public class FireStore {
     public void getBookshelf(String bookshelf, RecyclerView bookshelf_RV ) {
 
         List<String> bookshelfList = new ArrayList<>();
-        
+        bookshelf_RV.setAdapter(new ShelfAdapter(context,null));
+
         db.collection("Bookshelves").document(USER_ID).collection("Bookshelf").document(bookshelf)
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override

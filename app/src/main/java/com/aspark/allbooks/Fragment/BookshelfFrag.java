@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aspark.allbooks.Adapter.ShelfAdapter;
 import com.aspark.allbooks.Adapter.bookshelfNameAdapter;
 import com.aspark.allbooks.FireStore;
 import com.aspark.allbooks.Network.NetworkRequest;
@@ -62,8 +63,9 @@ public class BookshelfFrag extends Fragment {
 
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(),2);
         shelfRecyclerView.setLayoutManager(layoutManager);
-        fireStore.getBookshelf("Favorites",shelfRecyclerView);
+        shelfRecyclerView.setAdapter(new ShelfAdapter(view.getContext(),null));
 
+        fireStore.getBookshelf("Favorites",shelfRecyclerView);
 
         bookshelfName_RV.setAdapter(new bookshelfNameAdapter(bookshelfNameList,shelfRecyclerView));
 
