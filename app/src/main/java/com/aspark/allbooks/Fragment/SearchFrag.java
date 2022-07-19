@@ -69,6 +69,7 @@ public class SearchFrag extends Fragment implements View.OnClickListener {
         searchView.clearFocus();
         recentlyViewedScrollView.setVisibility(View.VISIBLE);
 
+        Log.i(TAG, "onViewCreated: showRecentlyViewData");
         showData();
 
         queryHintTextView.setOnClickListener(this);
@@ -79,17 +80,14 @@ public class SearchFrag extends Fragment implements View.OnClickListener {
 
     private void showData() {
 
-        SharedPreferences preferences = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
-        String userId = preferences.getString("userId"," ");
-
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recentlyViewed_RV.setLayoutManager(layoutManager);
         recentlyViewed_RV.stopScroll();
         recentlyViewed_RV.setAdapter(new RecentlyViewedAdapter());
 
+        Log.i(TAG, "showData: Calling fireStore");
         FireStore fireStore = new FireStore(context);
-        ArrayList<String> arrayList = fireStore.getRecentlyViewed(userId,recentlyViewed_RV);
-        Log.i(TAG, "arrayList  "+arrayList);
+        fireStore.getRecentlyViewed(recentlyViewed_RV);
 
     }
 
@@ -100,27 +98,12 @@ public class SearchFrag extends Fragment implements View.OnClickListener {
         startActivity(new Intent(view.getContext(), SearchActivity.class));
     }
 
-    public void setRecentlyViewed_RV(Context context, ArrayList<String> recentlyViewedList, RecyclerView recentlyViewed_RV) {
-
-        if (recentlyViewedList != null) {
-
-            NetworkRequest networkReq;
-            networkReq = new NetworkRequest(context, recentlyViewed_RV);
-            networkReq.showRecentlyViewed(recentlyViewed_RV, recentlyViewedList);
-
-        } else {
-
-            recentlyViewed_RV.setVisibility(View.GONE);
-            Toast.makeText(context, "Nothing to show in Recently Viewed", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     @Override
     public void onResume() {
         super.onResume();
 
         Log.i(TAG, "onResume: refresh recentlyViewed");
-        showData();
+      //  showData();
 
     }
 }

@@ -1,6 +1,5 @@
 package com.aspark.allbooks.Network;
 
-import static android.content.ContentValues.TAG;
 import static com.android.volley.Request.Method.GET;
 import static com.android.volley.Request.Method.POST;
 
@@ -27,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +34,7 @@ import java.util.Random;
 
 public class NetworkRequest {
 
+    private final String TAG = "NetworkRequest";
     DataModel booksData;
     RecyclerView  recyclerView;
     List<DataModel> booksDataList;
@@ -46,6 +47,7 @@ public class NetworkRequest {
     public static String ACCESS_TOKEN ;
      String REFRESH_TOKEN ;
     public  List<DataModel> shelfList;
+    int prevSize=-1;
 
 
     public NetworkRequest() {
@@ -516,7 +518,6 @@ public class NetworkRequest {
             }
         };
 
-
         requestQueue.add(objectRequest);
 
 
@@ -525,9 +526,13 @@ public class NetworkRequest {
     public void showRecentlyViewed(RecyclerView recentlyViewed_rv, ArrayList<String> list) {
 
         ArrayList<DataModel> recentlyViewedList = new ArrayList<>();
+//        DataModel[] recentViewList = new DataModel[12];
+        for (int i=0 ; i<list.size();++i)
+            recentlyViewedList.add(null);
 
         for ( String volumeId: list) {
 
+            Log.d(TAG, "showRecentlyViewed: volumeIds "+volumeId);
             url = "https://www.googleapis.com/books/v1/volumes/" + volumeId + "?key=" + API_KEY;
 
             JsonObjectRequest objectRequest = new JsonObjectRequest(GET, url, null, new Response.Listener<JSONObject>() {
@@ -543,9 +548,29 @@ public class NetworkRequest {
 
                         volumeInfo = response.getJSONObject("volumeInfo");
 
-                        recentlyViewedList.add(storeData(volumeInfo, dataModel));
-                        Log.i("TAG", "recentlyViewed list "+recentlyViewedList.size());
-                        recentlyViewed_rv.setAdapter(new RecentlyViewedAdapter(recentlyViewedList));
+
+                        // Cannot use arrayList because i may have to add objects at position larger than size of arrayList
+                        // It throws indexOutOfBoundException
+
+                        int index = list.indexOf(volumeId);
+
+                        recentlyViewedList.remove(index);
+                        Log.d(TAG, "onResponse: adding "+volumeId +" at "+index);
+                        recentlyViewedList.add(index,storeData(volumeInfo, dataModel));
+
+//                          recentViewList[list.indexOf(volumeId)] = storeData(volumeInfo,dataModel);
+                        Log.i(TAG, "onResponse: recentlyView volumeId "+volumeId);
+                        Log.d(TAG, "onResponse: recentList size "+recentlyViewedList.size());
+                        Log.d(TAG, "onResponse: List size "+list.size());
+
+                        if (recentlyViewedList.size() == list.size() && !recentlyViewedList.contains(null)) {
+
+                            //to sort the recentlyViewedList according to list.
+                        //    sortRecentlyViewedList(recentlyViewedList,list);
+
+                            recentlyViewed_rv.setAdapter(new ShelfAdapter(context, recentlyViewedList));
+//                            recentlyViewed_rv.setAdapter((new ShelfAdapter(context,dataModel)));
+                        }
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -561,8 +586,39 @@ public class NetworkRequest {
 
             requestQueue.add(objectRequest);
         }
-        Log.i(TAG, "showRecentlyViewed: setting Adapter from Network "+recentlyViewedList.size());
-//        recentlyViewed_rv.setAdapter(new RecentlyViewedAdapter(recentlyViewedList));
+    }
+
+    private void sortRecentlyViewedList(ArrayList<DataModel> recentlyViewedList, ArrayList<String> list) {
+
+        for (int i=0; i< list.size(); ++i) {
+            DataModel getDataModel = recentlyViewedList.get(i);
+
+            Log.d(TAG, "onResponse: got getDataModel");
+
+            if (! list.get(i).equals(getDataModel.getVolumeId()))
+
+                for (int j=i+1; j< recentlyViewedList.size(); j++) {
+
+                    DataModel swapDataModel = recentlyViewedList.get(j);
+
+                    if ( list.get(i).equals(swapDataModel.getVolumeId())){
+
+                        Log.d(TAG, "onResponse: swapping");
+
+                        recentlyViewedList.remove(j);
+                        recentlyViewedList.add(j, getDataModel);
+                        recentlyViewedList.remove(i);
+                        recentlyViewedList.add(i,swapDataModel);
+
+                    }
+                    Log.d(TAG, "onResponse: recentlyList size "+recentlyViewedList.size());
+                    Log.d(TAG, "onResponse: j "+j);
+                }
+            Log.i(TAG, "onResponse: RecentlyViewList "+recentlyViewedList.get(i).getVolumeId());
+        }
+
+
+
     }
 
     public void getBookshelf(RecyclerView bookshelf_rv, List<String> bookshelfList) {

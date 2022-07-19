@@ -19,6 +19,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.model.Document;
 
@@ -27,11 +29,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class FireStore {
     String TAG = "FireStore";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    ArrayList<String> recentlyViewedList = new ArrayList<>();
+
     Context context;
 
     public FireStore(Context context) {
@@ -67,12 +70,11 @@ public class FireStore {
     public void addRecentlyViewed(String userId,String volumeId) {
 
         Map<String,Object> recently_viewed = new HashMap<>();
-//        ArrayList<String> list = new ArrayList<>();
-//        list.add(volumeId);
-        recently_viewed.put("volumeId_"+volumeId,volumeId);
+        recently_viewed.put("volumeId",volumeId);
+        recently_viewed.put("timestamp",FieldValue.serverTimestamp());
 
-        db.collection("recently_viewed").document(userId)
-                .set(recently_viewed, SetOptions.merge())
+        db.collection("recently_viewed").document(USER_ID).collection("recent").document(volumeId)
+                .set(recently_viewed)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
@@ -89,53 +91,92 @@ public class FireStore {
 
     }
 
-    public ArrayList<String> getRecentlyViewed(String userId, RecyclerView recentlyViewed_RV) {
+    public void getRecentlyViewed( RecyclerView recentlyViewed_RV) {
 
-        DocumentReference documentReference = db.collection("recently_viewed").document(userId);
-        documentReference.get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+        ArrayList<String> recentlyViewedList = new ArrayList<>();
 
-                        if (task.isSuccessful()) {
+        Query query = db.collection("recently_viewed").document(USER_ID).collection("recent")
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .limit(12);
 
-                            DocumentSnapshot snapshot = task.getResult();
-                            if (snapshot.exists()){
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
-                                Log.d(TAG, "recently_viewed exists "+snapshot.getData());
-                                Map<String,Object> map = snapshot.getData();
+                if (queryDocumentSnapshots.size() != 0) {
 
-                                if (map != null) {
-                                    for (Map.Entry<String,Object> entry : map.entrySet()) {
+                    for (DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()) {
 
-                                        String key = entry.getKey();
+                        String volumeId = Objects.requireNonNull(snapshot.getString("volumeId")).toString();
+                        recentlyViewedList.add(volumeId);
 
-                                        Log.d(TAG, "Map entry " + key);
-                                        Log.d(TAG, "entry value " + entry.getValue());
-                                        recentlyViewedList.add(entry.getValue().toString());
+                        Log.d(TAG, "onSuccess: volumeId "+volumeId);
 
-                                    }
-                                }
-
-                                Log.i(TAG, "recentlyViewedList "+ recentlyViewedList);
-                                SearchFrag searchFrag = new SearchFrag();
-                                searchFrag.setRecentlyViewed_RV(context,recentlyViewedList,recentlyViewed_RV);
-
-                            } else
-                                Log.i(TAG, "RecentlyView document does not exists");
-
-                        }else
-                            Log.i(TAG, "recentlyViewed task Failed "+task.getException());
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
 
-                        Log.e(TAG, "onFailure : recentlyViewed "+e.getMessage() );
-                    }
-                });
+                    NetworkRequest networkReq = new NetworkRequest(context, recentlyViewed_RV);
+                    networkReq.showRecentlyViewed(recentlyViewed_RV, recentlyViewedList);
 
-        return recentlyViewedList;
+                }
+                else {
+                    Log.i(TAG, "onSuccess: NO books found in recently_viewed");
+                }
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+                Log.e(TAG, "onFailure: could NOT get recently_viewed "+e.getMessage() );
+
+            }
+        });
+
+
+//        DocumentReference documentReference = db.collection("recently_viewed").document(userId);
+//        documentReference.get()
+//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//
+//                        if (task.isSuccessful()) {
+//
+//                            DocumentSnapshot snapshot = task.getResult();
+//                            if (snapshot.exists()){
+//
+//                                Log.d(TAG, "recently_viewed exists "+snapshot.getData());
+//                                Map<String,Object> map = snapshot.getData();
+//
+//                                if (map != null) {
+//                                    for (Map.Entry<String,Object> entry : map.entrySet()) {
+//
+//                                        String key = entry.getKey();
+//
+//                                        Log.d(TAG, "Map entry " + key);
+//                                        Log.d(TAG, "entry value " + entry.getValue());
+//                                        recentlyViewedList.add(entry.getValue().toString());
+//
+//                                    }
+//                                }
+//
+//                                Log.i(TAG, "recentlyViewedList "+ recentlyViewedList);
+//                                SearchFrag searchFrag = new SearchFrag();
+//                                searchFrag.setRecentlyViewed_RV(context,recentlyViewedList,recentlyViewed_RV);
+//
+//                            } else
+//                                Log.i(TAG, "RecentlyView document does not exists");
+//
+//                        }else
+//                            Log.i(TAG, "recentlyViewed task Failed "+task.getException());
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//
+//                        Log.e(TAG, "onFailure : recentlyViewed "+e.getMessage() );
+//                    }
+//                });
+
     }
     
     public void addToBookshelf(String volumeId, String bookshelf) {
