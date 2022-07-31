@@ -28,13 +28,15 @@
         <entry key="app/src/main/res/layout/account_item_layout.xml" value="0.3234375" />
         <entry key="app/src/main/res/layout/activity_book_detail.xml" value="0.3234375" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.32708333333333334" />
+        <entry key="app/src/main/res/layout/activity_login2.xml" value="0.3234375" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_search.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/activity_sign_up.xml" value="0.37916666666666665" />
         <entry key="app/src/main/res/layout/activity_web_auth.xml" value="0.32708333333333334" />
         <entry key="app/src/main/res/layout/bookshelf_item.xml" value="0.32708333333333334" />
         <entry key="app/src/main/res/layout/bookshelfname_item_layout.xml" value="0.3223958333333333" />
         <entry key="app/src/main/res/layout/data_placeholder_layout.xml" value="0.3234375" />
-        <entry key="app/src/main/res/layout/fragment_account.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_account.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_bookshelf.xml" value="0.32708333333333334" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.375" />

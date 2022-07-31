@@ -1,8 +1,9 @@
 package com.aspark.allbooks;
 
-import static com.aspark.allbooks.Activity.LoginActivity.USER_ID;
+
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -34,26 +35,38 @@ import java.util.Objects;
 public class FireStore {
     String TAG = "FireStore";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+    public static String USER_ID;
     Context context;
 
     public FireStore(Context context) {
         this.context = context;
     }
 
-    public void addUser(String userId,String email) {
+    public void addUser(String user_id,String firstName,String lastName,String phoneNumber,String email, String password, String first_login ) {
 
         Map<String, Object>  users = new HashMap<>();
-        users.put("user",email);
-        users.put("refresh_token","abcdefghijklmnopqrstuvwxyz");
+        users.put("user_id",user_id);
+        users.put("first_name",firstName);
+        users.put("last_name",lastName);
+        users.put("mobile_number",phoneNumber);
+        users.put("email",email);
+        users.put("password",password);
+        users.put("last_login",FieldValue.serverTimestamp());
+        if (first_login !=null)
+        users.put("first_login",FieldValue.serverTimestamp());
 
-        db.collection("users").document(userId)
-                .set(users,SetOptions.merge())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
+        db.collection("users")
+                .add(users)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
-                    public void onSuccess(Void unused) {
+                    public void onSuccess(DocumentReference documentReference) {
+                        USER_ID = documentReference.getId();
+                        Log.d(TAG, "onSuccess: user added userid =" +USER_ID);
 
-                        Log.d(TAG, "onSuccess: user added");
+                        SharedPreferences preferences1 = context.getSharedPreferences(context.getPackageName(),Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences1.edit();
+                        editor.putString("userId",USER_ID);
+                        editor.apply();
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -67,7 +80,7 @@ public class FireStore {
 
     }
 
-    public void addRecentlyViewed(String userId,String volumeId) {
+    public void addRecentlyViewed(String volumeId) {
 
         Map<String,Object> recently_viewed = new HashMap<>();
         recently_viewed.put("volumeId",volumeId);
@@ -128,54 +141,8 @@ public class FireStore {
             public void onFailure(@NonNull Exception e) {
 
                 Log.e(TAG, "onFailure: could NOT get recently_viewed "+e.getMessage() );
-
             }
         });
-
-
-//        DocumentReference documentReference = db.collection("recently_viewed").document(userId);
-//        documentReference.get()
-//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//
-//                        if (task.isSuccessful()) {
-//
-//                            DocumentSnapshot snapshot = task.getResult();
-//                            if (snapshot.exists()){
-//
-//                                Log.d(TAG, "recently_viewed exists "+snapshot.getData());
-//                                Map<String,Object> map = snapshot.getData();
-//
-//                                if (map != null) {
-//                                    for (Map.Entry<String,Object> entry : map.entrySet()) {
-//
-//                                        String key = entry.getKey();
-//
-//                                        Log.d(TAG, "Map entry " + key);
-//                                        Log.d(TAG, "entry value " + entry.getValue());
-//                                        recentlyViewedList.add(entry.getValue().toString());
-//
-//                                    }
-//                                }
-//
-//                                Log.i(TAG, "recentlyViewedList "+ recentlyViewedList);
-//                                SearchFrag searchFrag = new SearchFrag();
-//                                searchFrag.setRecentlyViewed_RV(context,recentlyViewedList,recentlyViewed_RV);
-//
-//                            } else
-//                                Log.i(TAG, "RecentlyView document does not exists");
-//
-//                        }else
-//                            Log.i(TAG, "recentlyViewed task Failed "+task.getException());
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//
-//                        Log.e(TAG, "onFailure : recentlyViewed "+e.getMessage() );
-//                    }
-//                });
 
     }
     

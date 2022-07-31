@@ -1,20 +1,18 @@
 package com.aspark.allbooks.Activity;
 
-import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +22,6 @@ import com.aspark.allbooks.Network.NetworkRequest;
 import com.aspark.allbooks.R;
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -38,7 +35,6 @@ public class BookDetailActivity extends AppCompatActivity implements PopupMenu.O
     DataModel bookData;
     RecyclerView fromAuthorRecyclerView ,youMayLikeRecyclerView;
     String volumeId;
-
     FloatingActionButton floatingActionButton;
 
 
@@ -46,6 +42,16 @@ public class BookDetailActivity extends AppCompatActivity implements PopupMenu.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_detail);
+
+        Toolbar toolbar = findViewById(R.id.toolBar);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+
+        assert actionBar != null;
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("");
+
 
         bookCover = findViewById(R.id.bookCover);
         descriptionView = findViewById(R.id.descriptionText);
@@ -60,6 +66,7 @@ public class BookDetailActivity extends AppCompatActivity implements PopupMenu.O
         fromAuthorRecyclerView = findViewById(R.id.fromAuthorRecyclerView);
         youMayLikeRecyclerView = findViewById(R.id.youMayLikeRecyclerView);
         floatingActionButton = findViewById(R.id.floatingActionButton);
+
 
         bookData = (DataModel) getIntent().getSerializableExtra("bookData");
 
@@ -139,9 +146,8 @@ public class BookDetailActivity extends AppCompatActivity implements PopupMenu.O
 
         Log.i(TAG, "onPause: ");
 
-        SharedPreferences preferences = getSharedPreferences(getPackageName(),MODE_PRIVATE);
         FireStore fireStore = new FireStore(getApplicationContext());
-        fireStore.addRecentlyViewed(preferences.getString("userId",null),volumeId);
+        fireStore.addRecentlyViewed(volumeId);
 
     }
 

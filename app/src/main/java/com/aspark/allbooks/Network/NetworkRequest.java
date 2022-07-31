@@ -35,7 +35,7 @@ import java.util.Random;
 public class NetworkRequest {
 
     private final String TAG = "NetworkRequest";
-    DataModel booksData;
+
     RecyclerView  recyclerView;
     List<DataModel> booksDataList;
     final static String BASE_URI = " https://www.googleapis.com/books/v1";
@@ -46,11 +46,8 @@ public class NetworkRequest {
     SearchFrag searchFragObj;
     public static String ACCESS_TOKEN ;
      String REFRESH_TOKEN ;
-    public  List<DataModel> shelfList;
-    int prevSize=-1;
 
-
-    public NetworkRequest() {
+     public NetworkRequest() {
     }
 
     public NetworkRequest( Context context, RecyclerView recyclerView) {
@@ -368,16 +365,6 @@ public class NetworkRequest {
 
     }
 
-    private void getNewRefreshToken() {
-
-
-
-
-
-
-    }
-
-
     public void fromAuthor(String authorName) {
 
         List<DataModel> fromAuthorList = new ArrayList<>();
@@ -526,7 +513,7 @@ public class NetworkRequest {
     public void showRecentlyViewed(RecyclerView recentlyViewed_rv, ArrayList<String> list) {
 
         ArrayList<DataModel> recentlyViewedList = new ArrayList<>();
-//        DataModel[] recentViewList = new DataModel[12];
+
         for (int i=0 ; i<list.size();++i)
             recentlyViewedList.add(null);
 
@@ -563,7 +550,7 @@ public class NetworkRequest {
                         Log.d(TAG, "onResponse: recentList size "+recentlyViewedList.size());
                         Log.d(TAG, "onResponse: List size "+list.size());
 
-                        if (recentlyViewedList.size() == list.size() && !recentlyViewedList.contains(null)) {
+                        if (!recentlyViewedList.contains(null)) {
 
                             //to sort the recentlyViewedList according to list.
                         //    sortRecentlyViewedList(recentlyViewedList,list);
@@ -660,10 +647,8 @@ public class NetworkRequest {
             requestQueue.add(objectRequest);
         }
         Log.i(TAG, "getBookshelf: setting Adapter from Network "+bookList.size());
-//        recentlyViewed_rv.setAdapter(new RecentlyViewedAdapter(recentlyViewedList));
 
-
-    }
+     }
 }
 
 

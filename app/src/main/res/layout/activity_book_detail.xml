@@ -7,6 +7,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Activity.BookDetailActivity">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/toolBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_back"
+            app:layout_scrollFlags="scroll|enterAlways" />
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView_book_detail"
         android:layout_width="match_parent"
@@ -15,7 +30,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="20dp">
+            android:paddingBottom="20dp"
+            android:layout_below="@+id/toolBarLayout">
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/coverCard"
@@ -23,7 +39,8 @@
                 android:layout_width="180dp"
                 android:layout_height="200dp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="40dp"
+
+                android:layout_marginTop="70dp"
                 app:cardCornerRadius="6dp">
 
                 <ImageView
@@ -333,6 +350,7 @@
         android:layout_margin="16dp"
         app:layout_behavior=".FABBehavior"
         android:layout_gravity="bottom|end"
-        app:srcCompat="@drawable/ic_bookmark" />
+        app:srcCompat="@drawable/ic_bookmark"
+        android:contentDescription="To add book into bookshelf"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

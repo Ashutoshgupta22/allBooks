@@ -1,6 +1,7 @@
 package com.aspark.allbooks.Fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Objects;
 
 public class HomeFrag extends Fragment {
+    private final String TAG ="HomeFrag";
     String userName;
     TextView userNameTextView;
     HomeNetReq homeNetReq;
@@ -56,9 +58,11 @@ public class HomeFrag extends Fragment {
         business_RV = view.findViewById(R.id.businessRecyclerView);
         mystery_RV = view.findViewById(R.id.mysteryRecyclerView);
 
-      if (currentUser!=null)
-        userName = Objects.requireNonNull(currentUser.getDisplayName()).split(" ")[0];
-        userNameTextView.setText(userName);
+      if (currentUser!=null) {
+          userName = Objects.requireNonNull(currentUser.getDisplayName()).split(" ")[0];
+          userNameTextView.setText(userName);
+          Log.i(TAG, "onViewCreated: display name= "+userName);
+      }
 
         LinearLayoutManager layoutManager ;
 

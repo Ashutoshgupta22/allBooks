@@ -1,8 +1,6 @@
 package com.aspark.allbooks.Activity;
 
-import static android.content.ContentValues.TAG;
-
-import static com.aspark.allbooks.Activity.LoginActivity.USER_ID;
+import static com.aspark.allbooks.FireStore.USER_ID;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +14,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import com.aspark.allbooks.FireStore;
 import com.aspark.allbooks.Fragment.AccountFrag;
 import com.aspark.allbooks.Fragment.BookshelfFrag;
 import com.aspark.allbooks.Fragment.HomeFrag;
@@ -24,12 +23,14 @@ import com.aspark.allbooks.Network.NetworkRequest;
 import com.aspark.allbooks.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final String TAG = "MainActivity";
     BottomNavigationView bottomNavigationView;
     FrameLayout frameLayout;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +40,19 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         frameLayout = findViewById(R.id.frameLayout);
 
-        SharedPreferences preferences = getSharedPreferences(getPackageName(),MODE_PRIVATE);
-        USER_ID = preferences.getString("userId",null);
+//        SharedPreferences preferences = getSharedPreferences(getPackageName(),MODE_PRIVATE);
+//        FireStore.USER_ID = preferences.getString("userId",null);
+
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+
+        if (currentUser!=null) {
+            USER_ID = currentUser.getUid();
+            Log.d(TAG, "onCreate: user id_token= "+currentUser.getIdToken(true));
+
+        }
+        Log.d(TAG, "onCreate: USER_ID= "+USER_ID);
+
 
         NavigationBarView.OnItemSelectedListener onItemSelectedListener = new NavigationBarView.OnItemSelectedListener() {
 

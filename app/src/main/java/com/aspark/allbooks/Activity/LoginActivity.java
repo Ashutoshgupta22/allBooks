@@ -1,6 +1,6 @@
 package com.aspark.allbooks.Activity;
 
-import static android.content.ContentValues.TAG;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +17,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -27,6 +29,7 @@ import com.google.android.gms.auth.api.identity.BeginSignInResult;
 import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.identity.SignInClient;
 import com.google.android.gms.auth.api.identity.SignInCredential;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -37,12 +40,21 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthCredential;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.SignInMethodQueryResult;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
 
-
-    Button loginBtn;
+    private  final String TAG = "LoginActivity";
+    Button loginBtn ;
+    SignInButton googleSignInBtn;
     private SignInClient oneTapClient, oneTapClientSignUp;
     private BeginSignInRequest signInRequest, signUpRequest;
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -52,7 +64,9 @@ public class LoginActivity extends AppCompatActivity {
     EditText loginEditText;
     RequestQueue requestQueue;
     Account[] account;
-    public static String USER_ID;
+    String email;
+    TextView signUpTextView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,19 +75,124 @@ public class LoginActivity extends AppCompatActivity {
 
         loginBtn = findViewById(R.id.loginBtn);
         loginEditText = findViewById(R.id.loginEditText);
+        googleSignInBtn = findViewById(R.id.signInGoogleBtn);
+        signUpTextView = findViewById(R.id.signUpTextView);
+
         firebaseAuth = FirebaseAuth.getInstance();
         requestQueue = Volley.newRequestQueue(getApplicationContext());
 
+        loginEditText.setFocusedByDefault(false);
+        loginEditText.clearFocus();
 
-        loginBtn.setOnClickListener(view -> startActivity(new Intent(LoginActivity.this, MainActivity.class)));
-        loginEditText.setOnClickListener(new View.OnClickListener() {
+        email = getIntent().getStringExtra("email");
+        if (email !=null)
+            loginEditText.setText(email);
+
+        loginBtn.setOnClickListener(view -> {
+
+           email  = loginEditText.getText().toString().trim();
+
+            if (! email.isEmpty())
+                verifyEmail();
+
+            else
+                loginEditText.setError("Please enter a valid email or phone number");
+
+        });
+
+        googleSignInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i(TAG, "onClick: editText clicked");
+
+                Log.i(TAG, "onClick: sign in with google clicked");
 
                 showOneTapSignIn();
             }
         });
+
+        signUpTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "onClick: Signing up new user ");
+
+                startActivity(new Intent(LoginActivity.this,SignUpActivity.class));
+            }
+        });
+
+
+    }
+
+    private void verifyEmail() {
+
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
+        firebaseAuth.fetchSignInMethodsForEmail(email)
+                        .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+
+                                if (task.isSuccessful()) {
+
+                                    boolean emailEmpty = Objects.requireNonNull(task.getResult().getSignInMethods()).isEmpty();
+                                    if (! emailEmpty) {
+                                        Log.d(TAG, "onComplete: email exists");
+
+                                        Intent intent = new Intent(LoginActivity.this, LoginActivity2.class);
+                                        intent.putExtra("email", email);
+                                        startActivity(intent);
+                                    }
+                                    else
+                                        Toast.makeText(LoginActivity.this, "Email not registered", Toast.LENGTH_SHORT).show();
+
+                                }
+                                else
+                                    Log.d(TAG, "onComplete: fetching email methods Task failed");
+
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                        Toast.makeText(LoginActivity.this, "Please enter a valid email", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+
+//        firebaseAuth.signInWithEmailAndPassword()
+//
+//        FirebaseFirestore db = FirebaseFirestore.getInstance();
+//        Query query = db.collection("users")
+//                .whereEqualTo("email",email);
+//
+//        query.get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//
+//                        if (task.isSuccessful()) {
+//
+//                            QuerySnapshot documentSnapshot = task.getResult();
+//                            if (!documentSnapshot.isEmpty()) {
+//                                Log.d(TAG, "onComplete: User verified");
+//
+//
+//
+//                            } else {
+//                                Log.i(TAG, "onComplete: New User, SignUp!");
+//                                Toast.makeText(LoginActivity.this, "SignUp", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                        else
+//                            Toast.makeText(LoginActivity.this, "Something went wrong!", Toast.LENGTH_SHORT).show();
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.e(TAG, "onFailure: Something went wrong, cannot verify user." );
+//                    }
+//                });
     }
 
     private void showOneTapSignIn() {
@@ -264,17 +383,12 @@ public class LoginActivity extends AppCompatActivity {
 
                                     Log.i(TAG, "Seems like its your first time ;)");
 
-                                   USER_ID =currentUser.getDisplayName()+idToken;
-                                    SharedPreferences preferences1 = getSharedPreferences(getPackageName(),MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = preferences1.edit();
-                                    editor.putString("userId",USER_ID);
-                                    editor.apply();
-
                                     FireStore fireStore = new FireStore(getApplicationContext());
                                    // fireStore.createCollections(userId);
-                                    fireStore.addUser(USER_ID,currentUser.getEmail());
+                                    fireStore.addUser(null,currentUser.getDisplayName(),null, currentUser.getPhoneNumber()
+                                            ,currentUser.getEmail(),null,null);
 
-                                    getAuthCode();
+//                                    getAuthCode();
                                 } else {
                                     Log.i(TAG, "Hey! you are back :)");
 

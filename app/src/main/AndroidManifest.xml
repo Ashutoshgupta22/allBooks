@@ -12,11 +12,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AllBooks">
         <activity
+            android:name=".Activity.SignUpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.LoginActivity2"
+            android:exported="false" />
+        <activity
             android:name=".Activity.SearchActivity"
             android:exported="true" />
         <activity
             android:name=".Activity.BookDetailActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".Activity.MainActivity" />
         <activity
             android:name=".Activity.LoginActivity"
             android:exported="true"
