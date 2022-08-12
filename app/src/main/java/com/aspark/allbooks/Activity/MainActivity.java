@@ -40,9 +40,6 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         frameLayout = findViewById(R.id.frameLayout);
 
-//        SharedPreferences preferences = getSharedPreferences(getPackageName(),MODE_PRIVATE);
-//        FireStore.USER_ID = preferences.getString("userId",null);
-
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 

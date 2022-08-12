@@ -51,7 +51,7 @@ public class HomeFrag extends Fragment {
 
         userNameTextView= view.findViewById(R.id.userNameTextView);
         romance_RV = view.findViewById(R.id.romanceRecyclerView);
-        recommended_RV = view.findViewById(R.id.recommendedRecyclerView);
+//        recommended_RV = view.findViewById(R.id.recommendedRecyclerView);
         horror_RV = view.findViewById(R.id.horrorRecyclerView);
         fiction_RV = view.findViewById(R.id.fictionRecyclerView);
         biography_RV = view.findViewById(R.id.biographyRecyclerView);
@@ -66,9 +66,9 @@ public class HomeFrag extends Fragment {
 
         LinearLayoutManager layoutManager ;
 
-        layoutManager = new LinearLayoutManager(view.getContext(),LinearLayoutManager.HORIZONTAL,false);
-        recommended_RV.setLayoutManager(layoutManager);
-        recommended_RV.setAdapter(new ShelfAdapter(view.getContext(),null));
+//        layoutManager = new LinearLayoutManager(view.getContext(),LinearLayoutManager.HORIZONTAL,false);
+//        recommended_RV.setLayoutManager(layoutManager);
+//        recommended_RV.setAdapter(new ShelfAdapter(view.getContext(),null));
 
 
         layoutManager = new LinearLayoutManager(view.getContext(),LinearLayoutManager.HORIZONTAL,false);
@@ -97,7 +97,7 @@ public class HomeFrag extends Fragment {
 
         homeNetReq = new HomeNetReq(view.getContext());
 
-        homeNetReq.getRecommendedBooks(recommended_RV);
+//        homeNetReq.getRecommendedBooks(recommended_RV);
         homeNetReq.searchGenre("romance",romance_RV);
         homeNetReq.searchGenre("fiction", fiction_RV);
         homeNetReq.searchGenre("mystery",mystery_RV);

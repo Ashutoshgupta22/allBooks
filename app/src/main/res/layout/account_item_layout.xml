@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:text="Profile"
         android:textColor="@color/black"
-        android:textSize="22sp"
+        android:textSize="20sp"
         android:gravity="center"
         android:background="?android:selectableItemBackgroundBorderless"
         tools:layout_editor_absoluteX="111dp"

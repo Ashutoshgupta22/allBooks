@@ -37,7 +37,7 @@ public class SearchFrag extends Fragment implements View.OnClickListener {
     ScrollView recentlyViewedScrollView;
     CardView searchCardView;
     SearchView searchView;
-    TextView queryHintTextView;
+    TextView queryHintTextView,noDataFound;
     Context context;
 
     public SearchFrag() {
@@ -63,6 +63,7 @@ public class SearchFrag extends Fragment implements View.OnClickListener {
         recentlyViewedScrollView = view.findViewById(R.id.recentlyViewedScrollView);
         searchCardView = view.findViewById(R.id.searchCardView);
         queryHintTextView = view.findViewById(R.id.queryHintTextView);
+        noDataFound = view.findViewById(R.id.noDataFoundSearch_tv);
 
          context = view.getContext();
 
@@ -87,7 +88,7 @@ public class SearchFrag extends Fragment implements View.OnClickListener {
 
         Log.i(TAG, "showData: Calling fireStore");
         FireStore fireStore = new FireStore(context);
-        fireStore.getRecentlyViewed(recentlyViewed_RV);
+        fireStore.getRecentlyViewed(recentlyViewed_RV,noDataFound);
 
     }
 
@@ -103,7 +104,7 @@ public class SearchFrag extends Fragment implements View.OnClickListener {
         super.onResume();
 
         Log.i(TAG, "onResume: refresh recentlyViewed");
-      //  showData();
+        showData();
 
     }
 }

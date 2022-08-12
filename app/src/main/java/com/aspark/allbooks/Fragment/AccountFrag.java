@@ -21,15 +21,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.aspark.allbooks.Activity.LoginActivity;
 import com.aspark.allbooks.Adapter.AccountAdapter;
 import com.aspark.allbooks.R;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import org.w3c.dom.Text;
 
+import java.util.Objects;
+
 public class AccountFrag extends Fragment {
     Button signOutBtn;
     RecyclerView account_RV;
-    ImageView profilePic;
+    ShapeableImageView profilePic;
     String user_name;
     TextView userName_textView;
 
@@ -64,7 +67,7 @@ public class AccountFrag extends Fragment {
         userName_textView.setText(user_name);
 
         profilePic.setBackgroundResource(R.drawable.profile_background);
-        profilePic.setImageResource(R.drawable.logo);
+        profilePic.setImageResource(R.drawable.ic_account);
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext(),LinearLayoutManager.VERTICAL,false);
         account_RV.setLayoutManager(layoutManager);
         account_RV.setAdapter(new AccountAdapter());
@@ -79,6 +82,7 @@ public class AccountFrag extends Fragment {
                 Log.i(TAG, "User Signed Out");
 
                startActivity(new Intent(view.getContext(), LoginActivity.class));
+               requireActivity().finish();
 
             }
         });

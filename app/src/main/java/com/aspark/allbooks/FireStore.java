@@ -5,12 +5,13 @@ package com.aspark.allbooks;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aspark.allbooks.Adapter.ShelfAdapter;
-import com.aspark.allbooks.Fragment.SearchFrag;
 import com.aspark.allbooks.Network.NetworkRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -23,10 +24,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
-import com.google.firebase.firestore.model.Document;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,7 +103,7 @@ public class FireStore {
 
     }
 
-    public void getRecentlyViewed( RecyclerView recentlyViewed_RV) {
+    public void getRecentlyViewed(RecyclerView recentlyViewed_RV, TextView noDataFound) {
 
         ArrayList<String> recentlyViewedList = new ArrayList<>();
 
@@ -127,12 +126,16 @@ public class FireStore {
 
                     }
 
+                    recentlyViewed_RV.setVisibility(View.VISIBLE);
+                    noDataFound.setVisibility(View.GONE);
                     NetworkRequest networkReq = new NetworkRequest(context, recentlyViewed_RV);
                     networkReq.showRecentlyViewed(recentlyViewed_RV, recentlyViewedList);
 
                 }
                 else {
                     Log.i(TAG, "onSuccess: NO books found in recently_viewed");
+                    recentlyViewed_RV.setVisibility(View.GONE);
+                    noDataFound.setVisibility(View.VISIBLE);
                 }
 
             }
@@ -141,6 +144,9 @@ public class FireStore {
             public void onFailure(@NonNull Exception e) {
 
                 Log.e(TAG, "onFailure: could NOT get recently_viewed "+e.getMessage() );
+                recentlyViewed_RV.setVisibility(View.GONE);
+                noDataFound.setText("Something went wrong!");
+                noDataFound.setVisibility(View.VISIBLE);
             }
         });
 
@@ -169,7 +175,7 @@ public class FireStore {
                 });
     }
 
-    public void getBookshelf(String bookshelf, RecyclerView bookshelf_RV ) {
+    public void getBookshelf(String bookshelf, RecyclerView bookshelf_RV, TextView noDataFound) {
 
         List<String> bookshelfList = new ArrayList<>();
         bookshelf_RV.setAdapter(new ShelfAdapter(context,null));
@@ -192,13 +198,18 @@ public class FireStore {
                                         
                                         bookshelfList.add(entry.getValue().toString());
                                     }
+                                    bookshelf_RV.setVisibility(View.VISIBLE);
+                                    noDataFound.setVisibility(View.GONE);
                                     NetworkRequest networkRequest = new NetworkRequest(context);
                                     networkRequest.getBookshelf(bookshelf_RV, bookshelfList);
 
                                 }
                             }
-                            else
+                            else {
                                 Log.i(TAG, "onComplete: document does NOT exist");
+                                bookshelf_RV.setVisibility(View.GONE);
+                                noDataFound.setVisibility(View.VISIBLE);
+                            }
                         }
                         else
                             Log.i(TAG, "onComplete: task is unsuccessful");
@@ -209,6 +220,10 @@ public class FireStore {
                     public void onFailure(@NonNull Exception e) {
 
                         Log.i(TAG, "onFailure: Could NOT get books from bookshelf "+ bookshelf+" Error "+e.getMessage());
+
+                        bookshelf_RV.setVisibility(View.GONE);
+                        noDataFound.setText("Something went wrong!");
+                        noDataFound.setVisibility(View.VISIBLE);
                     }
                 });
         

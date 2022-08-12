@@ -22,14 +22,15 @@ public class bookshelfNameAdapter extends RecyclerView.Adapter<bookshelfNameAdap
     int prevClickedPos=0;
     Boolean firstTime;
     RecyclerView bookshelf_RV;
+    TextView noDataFound;
 
 
-
-    public bookshelfNameAdapter(List<String> bookshelfNameList, RecyclerView bookshelf_RV) {
+    public bookshelfNameAdapter(List<String> bookshelfNameList, RecyclerView bookshelf_RV,TextView noDataFound) {
 
         firstTime = true;
         this.bookshelfNameList = bookshelfNameList;
         this.bookshelf_RV = bookshelf_RV;
+        this.noDataFound = noDataFound;
 
     }
 
@@ -85,11 +86,12 @@ public class bookshelfNameAdapter extends RecyclerView.Adapter<bookshelfNameAdap
 
             if(prevClickedPos != getAdapterPosition()) {
 
-            fireStore.getBookshelf(bookshelfNameList.get(getAdapterPosition()),bookshelf_RV);
+                //TODO scroll to clicked bookshelf name
+                fireStore.getBookshelf(bookshelfNameList.get(getAdapterPosition()),bookshelf_RV,noDataFound);
 
-            notifyItemChanged(prevClickedPos);
-            prevClickedPos = getAdapterPosition();
-            bookshelfName_TextV.setBackground(AppCompatResources.getDrawable(view.getContext(), R.drawable.chosen_bookshelfname_bg));
+                notifyItemChanged(prevClickedPos);
+                prevClickedPos = getAdapterPosition();
+                bookshelfName_TextV.setBackground(AppCompatResources.getDrawable(view.getContext(), R.drawable.chosen_bookshelfname_bg));
             }
         }
 

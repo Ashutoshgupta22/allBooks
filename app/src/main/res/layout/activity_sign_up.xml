@@ -76,7 +76,7 @@
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
 
-        android:id="@+id/materialInput_email"
+        android:id="@+id/signupEmail_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Email"
@@ -102,10 +102,10 @@
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
 
-        android:id="@+id/materialInput_mobileNumber"
+        android:id="@+id/confirmPassword_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Mobile number"
+        android:hint="Confirm password"
         app:hintTextColor="@color/secondary_color"
         android:focusedByDefault="false"
         app:boxStrokeColor="@color/primary_color"
@@ -113,15 +113,15 @@
         android:layout_marginEnd="30dp"
         android:layout_marginTop="20dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:layout_constraintTop_toBottomOf="@+id/materialInput_email"
+        app:layout_constraintTop_toBottomOf="@+id/signupPassword_input"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/mobileNumber_EditText"
+            android:id="@+id/confirmPassword_signup_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"
+            android:inputType="textPassword"
             android:maxLines="1"
             android:focusedByDefault="false"/>
 
@@ -129,7 +129,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
 
-        android:id="@+id/materialInput_password"
+        android:id="@+id/signupPassword_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Password"
@@ -140,7 +140,7 @@
         android:layout_marginEnd="30dp"
         android:layout_marginTop="20dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:layout_constraintTop_toBottomOf="@+id/materialInput_mobileNumber"
+        app:layout_constraintTop_toBottomOf="@+id/signupEmail_input"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -161,10 +161,9 @@
         android:text="SignUp"
         android:textColor="@color/primary_color"
         android:textSize="20sp"
-        android:layout_marginBottom="60dp"
         android:layout_marginTop="60dp"
+        app:layout_constraintTop_toBottomOf="@id/confirmPassword_input"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

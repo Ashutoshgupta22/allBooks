@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +29,7 @@ public class BookshelfFrag extends Fragment {
     RecyclerView shelfRecyclerView, bookshelfName_RV;
     List<String> bookshelfNameList = new ArrayList<>();
     FireStore fireStore;
+    TextView noDataFound;
 
     public BookshelfFrag() {
     }
@@ -50,6 +52,7 @@ public class BookshelfFrag extends Fragment {
         shelfScrollView = view.findViewById(R.id.shelfScrollView);
         shelfRecyclerView = view.findViewById(R.id.shelfRecyclerView);
         bookshelfName_RV = view.findViewById(R.id.bookshelfName_RV);
+        noDataFound = view.findViewById(R.id.noDataFoundBookshelf_tv);
 
         fireStore = new FireStore(view.getContext());
 
@@ -65,9 +68,9 @@ public class BookshelfFrag extends Fragment {
         shelfRecyclerView.setLayoutManager(layoutManager);
         shelfRecyclerView.setAdapter(new ShelfAdapter(view.getContext(),null));
 
-        fireStore.getBookshelf("Favorites",shelfRecyclerView);
+        fireStore.getBookshelf("Favorites",shelfRecyclerView,noDataFound);
 
-        bookshelfName_RV.setAdapter(new bookshelfNameAdapter(bookshelfNameList,shelfRecyclerView));
+        bookshelfName_RV.setAdapter(new bookshelfNameAdapter(bookshelfNameList,shelfRecyclerView,noDataFound));
 
     }
 }

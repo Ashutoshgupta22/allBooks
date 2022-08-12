@@ -21,16 +21,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
 public class SignUpActivity extends AppCompatActivity {
 
     private static final String TAG = "SignUpActivity";
-    EditText firstName_editText, lastName_editText,email_editText,mobileNumber_editText,password_editText;
+    EditText firstName_editText, lastName_editText,email_editText, confirmPassword_editText,password_editText;
     Button signUpBtn;
-    String firstName,lastName,email,mobileNumber,password;
+    String firstName,lastName,email, confirmPassword,password;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser;
 
@@ -42,7 +41,7 @@ public class SignUpActivity extends AppCompatActivity {
         firstName_editText = findViewById(R.id.firstName_EditText);
         lastName_editText = findViewById(R.id.lastName_EditText);
         email_editText = findViewById(R.id.email_EditText);
-        mobileNumber_editText = findViewById(R.id.mobileNumber_EditText);
+        confirmPassword_editText = findViewById(R.id.confirmPassword_signup_edit);
         password_editText = findViewById(R.id.password_EditText);
         signUpBtn = findViewById(R.id.signUpBtn);
 
@@ -53,7 +52,7 @@ public class SignUpActivity extends AppCompatActivity {
                 firstName = firstName_editText.getText().toString().trim();
                 lastName = lastName_editText.getText().toString().trim();
                 email = email_editText.getText().toString().trim();
-                mobileNumber = mobileNumber_editText.getText().toString().trim();
+                confirmPassword = confirmPassword_editText.getText().toString().trim();
                 password = password_editText.getText().toString().trim();
 
                 if (firstName.isEmpty())
@@ -68,6 +67,10 @@ public class SignUpActivity extends AppCompatActivity {
 
                    if (password.length() <6)
                        password_editText.setError("Password must have at least 6 characters");
+
+                   else if (!Objects.equals(confirmPassword, password))
+                       confirmPassword_editText.setError("Password did not match");
+
                    else
                     {
                        if (! firstName.isEmpty() && ! email.isEmpty()){
@@ -83,7 +86,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void checkEmailExists() {
 
-
+        Log.i(TAG, "checkEmailExists: firebaseAuth "+firebaseAuth);
 
         firebaseAuth.fetchSignInMethodsForEmail(email)
                 .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
@@ -99,11 +102,14 @@ public class SignUpActivity extends AppCompatActivity {
                             }
                             else{
                                 registerUser();
+
+
                             }
                         }
-                        else
+                        else {
                             Log.d(TAG, "onComplete: fetching email methods Task failed");
 
+                        }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -114,6 +120,33 @@ public class SignUpActivity extends AppCompatActivity {
                     }
                 });
 
+    }
+
+    private void verifyEmail() {
+
+        Log.d(TAG, "verifyEmail: sending email verification link");
+
+        currentUser.sendEmailVerification()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.i(TAG, "onComplete: Email sent");
+
+                        Intent intent = new Intent(SignUpActivity.this,EmailVerifyActivity.class);
+                        intent.putExtra("email",email);
+//                        intent.putExtra("password",password);
+//                        intent.putExtra("firstName",firstName);
+//                        intent.putExtra("lastName",lastName);
+                        startActivity(intent);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                        Toast.makeText(SignUpActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void registerUser() {
@@ -128,9 +161,10 @@ public class SignUpActivity extends AppCompatActivity {
                             Log.d(TAG, "onSuccess: User registered successfully");
                             currentUser = task.getResult().getUser();
 
-                            Intent intent = new Intent(SignUpActivity.this,LoginActivity.class);
-                            intent.putExtra("email",email);
-                            startActivity(intent);
+                            verifyEmail();
+//                            Intent intent = new Intent(SignUpActivity.this,LoginActivity.class);
+//                            intent.putExtra("email",email);
+//                            startActivity(intent);
                             updateUserInfo();
                         }
                         else
@@ -166,7 +200,7 @@ public class SignUpActivity extends AppCompatActivity {
                             if (currentUser !=null) {
                                 Log.d(TAG, "onComplete: Adding user to backend");
                                 FireStore fireStore = new FireStore(getApplicationContext());
-                                fireStore.addUser(currentUser.getUid(),firstName,lastName,mobileNumber,email,password,"not_null");
+                                fireStore.addUser(currentUser.getUid(),firstName,lastName, null,email,password,"not_null");
                             }
                         }
 

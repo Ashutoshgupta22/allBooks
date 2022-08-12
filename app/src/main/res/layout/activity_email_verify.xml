@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.EmailVerifyActivity">
+
+    <TextView
+        android:id="@+id/VERIFY_TEXT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/work_sans_semibold"
+        android:text="Email Verification"
+        android:textColor="@color/secondary_color"
+        android:textSize="30sp"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
+    <TextView
+        android:id="@+id/verify_TV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="A verification email was sent to : "
+        app:layout_constraintTop_toBottomOf="@id/VERIFY_TEXT"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="15sp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="40dp"
+        tools:layout_editor_absoluteX="74dp"
+        tools:layout_editor_absoluteY="79dp" />
+
+    <Button
+        android:id="@+id/verifyBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        app:layout_constraintTop_toBottomOf="@id/textView5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="80dp"
+        tools:layout_editor_absoluteX="114dp"
+        tools:layout_editor_absoluteY="348dp" />
+
+    <TextView
+        android:id="@+id/email_verify_TV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="abcd@gmail.com"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/verify_TV"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/black"
+        tools:layout_editor_absoluteX="55dp"
+        tools:layout_editor_absoluteY="110dp" />
+
+    <TextView
+        android:id="@+id/info_verify_TV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Click on the link and try to login again "
+       app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/email_verify_TV"
+        android:layout_marginTop="80dp"
+        android:textSize="16sp"
+        tools:layout_editor_absoluteX="152dp"
+        tools:layout_editor_absoluteY="191dp" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="(Please check spam folder )"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/info_verify_TV"
+        android:layout_marginTop="40dp"
+        tools:layout_editor_absoluteX="50dp"
+        tools:layout_editor_absoluteY="198dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>

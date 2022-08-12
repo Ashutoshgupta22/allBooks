@@ -40,13 +40,8 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthCredential;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.SignInMethodQueryResult;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Objects;
 
@@ -61,11 +56,11 @@ public class LoginActivity extends AppCompatActivity {
     private static final int REQ_ONE_TAP_SIGN_IN = 101;
     private static final int REQ_ONE_TAP_SIGN_UP = 202;
     private boolean showOneTapUI = true;
-    EditText loginEditText;
+    EditText email_login_edit, password_login_edit;
     RequestQueue requestQueue;
     Account[] account;
-    String email;
-    TextView signUpTextView;
+    String email,password;
+    TextView signUpTextView,forgot_password_TV;
 
 
     @Override
@@ -74,32 +69,41 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         loginBtn = findViewById(R.id.loginBtn);
-        loginEditText = findViewById(R.id.loginEditText);
+        email_login_edit = findViewById(R.id.loginEmailEditText);
+        password_login_edit = findViewById(R.id.loginPasswordEditText);
+        forgot_password_TV = findViewById(R.id.forgotPassword);
         googleSignInBtn = findViewById(R.id.signInGoogleBtn);
         signUpTextView = findViewById(R.id.signUpTextView);
 
         firebaseAuth = FirebaseAuth.getInstance();
         requestQueue = Volley.newRequestQueue(getApplicationContext());
 
-        loginEditText.setFocusedByDefault(false);
-        loginEditText.clearFocus();
+        email_login_edit.setFocusedByDefault(false);
+        email_login_edit.clearFocus();
 
         email = getIntent().getStringExtra("email");
         if (email !=null)
-            loginEditText.setText(email);
+            email_login_edit.setText(email);
 
         loginBtn.setOnClickListener(view -> {
 
-           email  = loginEditText.getText().toString().trim();
+           email  = email_login_edit.getText().toString().trim();
+           password = password_login_edit.getText().toString().trim();
 
-            if (! email.isEmpty())
-                verifyEmail();
+            if ( email.isEmpty() ) {
+                email_login_edit.setError("Please enter a valid email");
+            }
+            else if (password.isEmpty())
+                password_login_edit.setError("Password cannot be empty");
 
-            else
-                loginEditText.setError("Please enter a valid email or phone number");
+            else if(password.length() < 6)
+                password_login_edit.setError("Password must have at least 6 characters");
+
+            else {
+                checkIfEmailRegistered();
+            }
 
         });
-
         googleSignInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,10 +123,45 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        forgot_password_TV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                startActivity(new Intent(LoginActivity.this,ResetPasswordActivity.class));
+
+            }
+        });
+
 
     }
 
-    private void verifyEmail() {
+    private void verifyPassword() {
+
+            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+            firebaseAuth.signInWithEmailAndPassword(email,password)
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+
+                            if (task.isSuccessful()) {
+
+                                Log.d(TAG, "onSuccess: Password verified");
+                               checkIfEmailVerified();
+                            }
+                            else
+                                password_login_edit.setError("Wrong password");
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(TAG, "onFailure: Something went wrong");
+                        }
+                    });
+
+        }
+
+
+    private void checkIfEmailRegistered() {
 
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
@@ -131,15 +170,16 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
 
+                                Log.i(TAG, "onComplete: task "+task);
                                 if (task.isSuccessful()) {
 
                                     boolean emailEmpty = Objects.requireNonNull(task.getResult().getSignInMethods()).isEmpty();
                                     if (! emailEmpty) {
                                         Log.d(TAG, "onComplete: email exists");
 
-                                        Intent intent = new Intent(LoginActivity.this, LoginActivity2.class);
-                                        intent.putExtra("email", email);
-                                        startActivity(intent);
+                                        verifyPassword();
+                                       // checkIfEmailVerified();
+
                                     }
                                     else
                                         Toast.makeText(LoginActivity.this, "Email not registered", Toast.LENGTH_SHORT).show();
@@ -158,41 +198,67 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
 
+    }
+
+    private void checkIfEmailVerified() {
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        assert currentUser != null;
+        if(currentUser.isEmailVerified()) {
+
+            Log.d(TAG, "checkIfEmailVerified: Email verified");
+
+            startActivity(new Intent(LoginActivity.this,MainActivity.class));
+            finish();
+          //  verifyPassword();
+        }
+        else {
+
+            Log.d(TAG, "checkIfEmailVerified: Email not verified");
+            
+            currentUser.sendEmailVerification()
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+
+                                    Log.d(TAG, "onComplete: Verification Email sent");
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(TAG, "onFailure: Verification email could not be verified");
+                        }
+                    });
+            
+            FirebaseAuth.getInstance().signOut();
+            Log.d(TAG, "checkIfEmailVerified: User signed out");
+
+            startActivity(new Intent(LoginActivity.this,EmailVerifyActivity.class));
 
 
-//        firebaseAuth.signInWithEmailAndPassword()
+//            currentUser.delete()
+//                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<Void> task) {
 //
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//        Query query = db.collection("users")
-//                .whereEqualTo("email",email);
-//
-//        query.get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//
-//                        if (task.isSuccessful()) {
-//
-//                            QuerySnapshot documentSnapshot = task.getResult();
-//                            if (!documentSnapshot.isEmpty()) {
-//                                Log.d(TAG, "onComplete: User verified");
+//                            Log.d(TAG, "onComplete: User deleted successfully because email not verified" );
 //
 //
 //
-//                            } else {
-//                                Log.i(TAG, "onComplete: New User, SignUp!");
-//                                Toast.makeText(LoginActivity.this, "SignUp", Toast.LENGTH_SHORT).show();
-//                            }
 //                        }
-//                        else
-//                            Toast.makeText(LoginActivity.this, "Something went wrong!", Toast.LENGTH_SHORT).show();
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.e(TAG, "onFailure: Something went wrong, cannot verify user." );
-//                    }
-//                });
+//                    }).addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//                            Log.d(TAG, "onFailure: Could not delete user "+e.getMessage());
+//
+//                        }
+//                    });
+        }
+
+
+
+
     }
 
     private void showOneTapSignIn() {

@@ -23,23 +23,23 @@
 
     <com.google.android.material.textfield.TextInputLayout
 
-        android:id="@+id/materialInput"
+        android:id="@+id/emailLoginInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email or mobile number"
+        android:hint="Email"
         app:hintTextColor="@color/secondary_color"
         android:focusedByDefault="false"
         app:boxStrokeColor="@color/primary_color"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="60dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         app:layout_constraintTop_toBottomOf="@+id/LOGIN_TEXT"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/loginEditText"
+            android:id="@+id/loginEmailEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusedByDefault="false"
@@ -47,44 +47,68 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+
+        android:id="@+id/passwordLoginInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:focusedByDefault="false"
+        app:hintTextColor="#FF8038"
+        app:boxStrokeColor="@color/ic_launcher_logo_background"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="30dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:layout_constraintTop_toBottomOf="@+id/emailLoginInput"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/loginPasswordEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:inputType="textPassword" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+    <TextView
+        android:id="@+id/forgotPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Forgot Password?"
+        android:textStyle="bold"
+        android:textColor="@color/primary_color"
+        android:textSize="15sp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintTop_toBottomOf="@id/passwordLoginInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:layout_editor_absoluteX="258dp"
+        tools:layout_editor_absoluteY="337dp" />
 
 
     <TextView
         android:id="@+id/OR_TEXT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Or"
-        app:layout_constraintTop_toBottomOf="@id/materialInput"
+        android:text="Or sign in with"
+        app:layout_constraintTop_toBottomOf="@id/loginBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="40dp"
-        android:textSize="25sp"
+        android:layout_marginTop="50dp"
+        android:textSize="15sp"
         tools:layout_editor_absoluteX="89dp"
         tools:layout_editor_absoluteY="112dp" />
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/signInGoogleBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintTop_toBottomOf="@id/OR_TEXT"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
-<!--    <Button-->
-<!--        android:id="@+id/signInGoogleBtn"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_weight="1"-->
-<!--        android:text="Sign in with google"-->
-<!--        android:drawableStart="@drawable/common_google_signin_btn_icon_light_normal_background"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/OR_TEXT"-->
-<!--        android:layout_marginTop="40dp"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        tools:layout_editor_absoluteX="32dp"-->
-<!--        tools:layout_editor_absoluteY="392dp" />-->
-
 
     <Button
         android:id="@+id/loginBtn"
@@ -94,8 +118,8 @@
         android:text="Login"
         android:textColor="@color/primary_color"
         android:textSize="20sp"
-        android:layout_marginBottom="110dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="40dp"
+        app:layout_constraintTop_toBottomOf="@id/forgotPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="490dp" />
@@ -111,7 +135,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="30dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="30dp"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="598dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
