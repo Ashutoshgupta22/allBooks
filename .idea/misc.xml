@@ -12,6 +12,7 @@
         <entry key="app/src/main/res/drawable/ic_bookshelf_svg.xml" value="0.33" />
         <entry key="app/src/main/res/drawable/ic_home.xml" value="0.3335" />
         <entry key="app/src/main/res/drawable/ic_home_svg.xml" value="0.33" />
+        <entry key="app/src/main/res/drawable/ic_just_logo.xml" value="0.33" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.3335" />
         <entry key="app/src/main/res/drawable/ic_search_svg.xml" value="0.33" />
         <entry key="app/src/main/res/drawable/ic_settiings_svg.xml" value="0.33" />
@@ -21,6 +22,7 @@
         <entry key="app/src/main/res/drawable/icon_bookshelf.xml" value="0.163" />
         <entry key="app/src/main/res/drawable/icon_search.xml" value="0.163" />
         <entry key="app/src/main/res/drawable/icon_settings.xml" value="0.163" />
+        <entry key="app/src/main/res/drawable/just_logo.xml" value="0.33" />
         <entry key="app/src/main/res/drawable/profile_background.xml" value="0.329" />
         <entry key="app/src/main/res/drawable/splash_background.xml" value="0.3335" />
         <entry key="app/src/main/res/font/.xml" value="0.19635416666666666" />
@@ -49,6 +51,7 @@
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.33" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_logo.xml" value="0.3335" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_logo_round.xml" value="0.3335" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.25" />
         <entry key="app/src/main/res/xml/dimens.xml" value="0.3234375" />
       </map>
     </option>

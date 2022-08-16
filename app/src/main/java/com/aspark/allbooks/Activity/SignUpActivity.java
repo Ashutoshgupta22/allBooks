@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -134,10 +135,15 @@ public class SignUpActivity extends AppCompatActivity {
 
                         Intent intent = new Intent(SignUpActivity.this,EmailVerifyActivity.class);
                         intent.putExtra("email",email);
-//                        intent.putExtra("password",password);
-//                        intent.putExtra("firstName",firstName);
-//                        intent.putExtra("lastName",lastName);
                         startActivity(intent);
+
+                        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                        if (currentUser != null) {
+                            SharedPreferences preferences = getSharedPreferences(getPackageName(), MODE_PRIVATE);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("profile_pic", Objects.requireNonNull(currentUser.getPhotoUrl()).toString());
+                            editor.apply();
+                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

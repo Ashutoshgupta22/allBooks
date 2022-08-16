@@ -17,7 +17,7 @@ import java.util.Arrays;
 
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.viewHolder> {
 
-    String[] accountList = new String[]{"Profile","Theme","Search","Contact Developer"};
+    String[] accountList = new String[]{"Profile"};
 
 
     public AccountAdapter() {

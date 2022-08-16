@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.aspark.allbooks.Network.NetworkRequest;
 import com.aspark.allbooks.R;
@@ -18,6 +19,7 @@ public class SearchActivity extends AppCompatActivity {
     RecyclerView searchActivity_RV;
     String input;
     NetworkRequest networkReq;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +28,7 @@ public class SearchActivity extends AppCompatActivity {
 
         searchView = findViewById(R.id.searchViewActivity);
         searchActivity_RV = findViewById(R.id.searchActivity_RV);
-
+        progressBar = findViewById(R.id.progressBar);
 
         // this function is called when query is submitted or changed.
 
@@ -34,12 +36,13 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
 
+                progressBar.setVisibility(View.VISIBLE);
                 input = query.trim().replace(" ","+");
                 searchView.clearFocus();
                 Log.i("", "onQueryTextSubmit: input is "+input);
 
                 networkReq  = new NetworkRequest(getApplicationContext(),searchActivity_RV);
-                networkReq.search(input);
+                networkReq.search(input,progressBar);
 
                 GridLayoutManager layoutManager = new GridLayoutManager(getApplicationContext(),2);
                 searchActivity_RV.setLayoutManager(layoutManager);

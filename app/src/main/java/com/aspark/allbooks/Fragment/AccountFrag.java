@@ -2,7 +2,10 @@ package com.aspark.allbooks.Fragment;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -67,7 +70,15 @@ public class AccountFrag extends Fragment {
         userName_textView.setText(user_name);
 
         profilePic.setBackgroundResource(R.drawable.profile_background);
-        profilePic.setImageResource(R.drawable.ic_account);
+
+        SharedPreferences preferences = requireActivity().getPreferences(Context.MODE_PRIVATE);
+        String dp_url = preferences.getString("profile_pic",null);
+
+        if (dp_url !=null)
+            profilePic.setImageURI(Uri.parse(dp_url));
+        else
+            profilePic.setImageResource(R.drawable.ic_account);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext(),LinearLayoutManager.VERTICAL,false);
         account_RV.setLayoutManager(layoutManager);
         account_RV.setAdapter(new AccountAdapter());

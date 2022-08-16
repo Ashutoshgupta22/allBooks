@@ -31,7 +31,7 @@ public class BookDetailActivity extends AppCompatActivity implements PopupMenu.O
     ImageView bookCover ;
     TextView descriptionView , authorView,titleView;
     TextView no_of_pagesView,languageView,ratingView;
-    TextView publisherView ,publishedDateView, categoriesView;
+    TextView publisherView ,publishedDateView, categoriesView, fromAuthor_tv,youMayLike_tv;
     DataModel bookData;
     RecyclerView fromAuthorRecyclerView ,youMayLikeRecyclerView;
     String volumeId;
@@ -66,6 +66,8 @@ public class BookDetailActivity extends AppCompatActivity implements PopupMenu.O
         fromAuthorRecyclerView = findViewById(R.id.fromAuthorRecyclerView);
         youMayLikeRecyclerView = findViewById(R.id.youMayLikeRecyclerView);
         floatingActionButton = findViewById(R.id.floatingActionButton);
+        fromAuthor_tv = findViewById(R.id.FROM_AUTHOR);
+        youMayLike_tv =findViewById(R.id.YOU_MAY_LIKE);
 
 
         bookData = (DataModel) getIntent().getSerializableExtra("bookData");
@@ -108,7 +110,7 @@ public class BookDetailActivity extends AppCompatActivity implements PopupMenu.O
             youMayLikeRecyclerView.setLayoutManager(layoutManager2);
 
             NetworkRequest networkRequest2 = new NetworkRequest(this,youMayLikeRecyclerView);
-            networkRequest2.youMayLike(categories);
+            networkRequest2.youMayLike(categories,youMayLike_tv);
 
         }else {
             categoriesView.setText("Unknown");
@@ -119,7 +121,7 @@ public class BookDetailActivity extends AppCompatActivity implements PopupMenu.O
         fromAuthorRecyclerView.setLayoutManager(layoutManager);
 
         NetworkRequest networkRequest = new NetworkRequest(this,fromAuthorRecyclerView);
-        networkRequest.fromAuthor(authorName );
+        networkRequest.fromAuthor(authorName,fromAuthor_tv);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override

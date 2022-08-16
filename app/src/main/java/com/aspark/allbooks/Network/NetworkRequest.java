@@ -7,6 +7,9 @@ import static com.android.volley.Request.Method.POST;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -64,7 +67,7 @@ public class NetworkRequest {
 
     }
 
-    public void search(String query) {
+    public void search(String query, ProgressBar progressBar) {
 
 
             url = BASE_URI + "/volumes?q=" + query+"&maxResults=40&key="+API_KEY;
@@ -98,6 +101,7 @@ public class NetworkRequest {
 
                         Log.i("TAG", "onResponse: title "+booksDataList.get(0).getTitle());
 
+                        progressBar.setVisibility(View.GONE);
                         recyclerView.setAdapter(new SearchAdapter(context,booksDataList));
 
                 } catch (JSONException e) {
@@ -167,8 +171,11 @@ public class NetworkRequest {
         else
             booksData.setNoOfPages("Unknown");
 
-        if (volumeInfo.has("language"))
-            booksData.setLanguage(volumeInfo.getString("language"));
+        if (volumeInfo.has("language")) {
+            Log.d(TAG, "storeData: language= "+volumeInfo.getString("language"));
+            if (volumeInfo.getString("language").equals("en"))
+            booksData.setLanguage("English");
+        }
         else
             booksData.setLanguage("Unknown");
 
@@ -365,7 +372,7 @@ public class NetworkRequest {
 
     }
 
-    public void fromAuthor(String authorName) {
+    public void fromAuthor(String authorName,TextView fromAuthor_tv) {
 
         List<DataModel> fromAuthorList = new ArrayList<>();
 
@@ -399,9 +406,25 @@ public class NetworkRequest {
                         if (volumeInfo.has("imageLinks"))
                             fromAuthorList.add(storeData(volumeInfo, dataModel));
                     }
-                        recyclerView.setAdapter(new ShelfAdapter(context,fromAuthorList));
+                        if (fromAuthorList.isEmpty())
+                        {
+                            Log.d(TAG, "onResponse: fromAuthorList is empty");
+                            fromAuthor_tv.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.GONE);
+                        }
+                         else {
+                            Log.d(TAG, "onResponse: fromAuthorList is NOT empty");
+                               fromAuthor_tv.setVisibility(View.VISIBLE);
+                               recyclerView.setVisibility(View.VISIBLE);
+                               recyclerView.setAdapter(new ShelfAdapter(context,fromAuthorList));
+
+                        }
 
                 } catch (JSONException e) {
+
+                    Log.d(TAG, "onResponse:catch error fromAuthorList is empty");
+                    fromAuthor_tv.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.GONE);
                     e.printStackTrace();
                 }
             }
@@ -415,7 +438,7 @@ public class NetworkRequest {
         requestQueue.add(objectRequest);
     }
 
-    public void youMayLike(List<String> categories) {
+    public void youMayLike(List<String> categories, TextView youMayLike_tv) {
 
         List<DataModel> youMayLikeList = new ArrayList<>();
 
@@ -423,6 +446,8 @@ public class NetworkRequest {
 
         Random random  = new Random();
         int startIndex = random.nextInt(200);
+
+        Log.i(TAG, "youMayLike: category "+categories.get(0));
 
         String cUrl = "https://www.googleapis.com/books/v1/volumes?q=+subject:" +categories.get(0) + "&startIndex="+ startIndex+"&maxResults=40"+"&key=" + "AIzaSyAuSale2ufh6vE-gozkwcT-xsAD7cJyNCg";
 
@@ -433,7 +458,7 @@ public class NetworkRequest {
             @Override
             public void onResponse(JSONObject response) {
 
-                Log.d(TAG, "YOu May like list "+response.toString());
+                Log.i(TAG, "YOu May like list "+response.toString());
                 JSONArray jsonArray ;
                 JSONObject volumeInfo;
                 try {
@@ -453,9 +478,26 @@ public class NetworkRequest {
                         if (volumeInfo.has("imageLinks"))
                             youMayLikeList.add(storeData(volumeInfo, dataModel));
                     }
-                        recyclerView.setAdapter(new ShelfAdapter(context,youMayLikeList));
+                        if (youMayLikeList.isEmpty())
+                        {
+                            //TODO when category of a book is unknown youMAyLike_tv is still visible.
+                            Log.d(TAG, "onResponse: youMayLikeList is empty");
+                            youMayLike_tv.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.GONE);
+                        }
+                        else {
+                            Log.d(TAG, "onResponse: youMayLikeList is NOT empty");
+
+                            youMayLike_tv.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.VISIBLE);
+                            recyclerView.setAdapter(new ShelfAdapter(context, youMayLikeList));
+                        }
 
                 } catch (JSONException e) {
+                    Log.d(TAG, "onResponse: catch error youMayLikeList is empty");
+                    youMayLike_tv.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.GONE);
+
                     e.printStackTrace();
                  }
             }
@@ -466,48 +508,6 @@ public class NetworkRequest {
             }
         });
         requestQueue.add(objectRequest);
-    }
-
-    public void postRecentlyViewed(String volumeId) {
-
-        String vUrl = "https://www.googleapis.com/books/v1/mylibrary/bookshelves/6/addVolume?volumeId="+ volumeId +"&key="+API_KEY;
-
-        JsonObjectRequest objectRequest = new JsonObjectRequest(POST, vUrl, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-
-                Log.i(TAG, "Recent View Posted ");
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                Log.i(TAG, "Could not post Recent Viewed "+ error.getLocalizedMessage());
-
-            }
-        } ){
-            @Override
-            public Map<String, String> getHeaders() {
-
-                SharedPreferences preferences = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
-
-                HashMap<String, String> header = new HashMap<>();
-
-
-                if (ACCESS_TOKEN==null)
-                    ACCESS_TOKEN = preferences.getString("access_token","");
-
-                header.put("Authorization","Bearer "+ACCESS_TOKEN);
-
-                Log.i(TAG, "onResponse: ACCESS_TOKEN "+ACCESS_TOKEN);
-                return header;
-            }
-        };
-
-        requestQueue.add(objectRequest);
-
-
     }
 
     public void showRecentlyViewed(RecyclerView recentlyViewed_rv, ArrayList<String> list) {

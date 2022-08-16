@@ -27,7 +27,7 @@ public class FABBehavior extends FloatingActionButton.Behavior {
     public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull FloatingActionButton child,
                                        @NonNull View directTargetChild, @NonNull View target, int axes, int type) {
 
-        Log.d(TAG, "onStartNestedScroll: called");
+//        Log.d(TAG, "onStartNestedScroll: called");
 
         //TODO WTF does this do?
         return axes == ViewCompat.SCROLL_AXIS_VERTICAL ||
@@ -40,7 +40,7 @@ public class FABBehavior extends FloatingActionButton.Behavior {
 
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type, consumed);
 
-        Log.d(TAG, "onNestedScroll: called");
+//        Log.d(TAG, "onNestedScroll: called");
 
     if (dyConsumed >0 && child.getVisibility() == View.VISIBLE) {
 

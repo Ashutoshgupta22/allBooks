@@ -105,7 +105,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="0dp"
                         android:text="English"
                         android:textColor="@color/black"
                         android:textSize="19sp" />
@@ -205,6 +205,7 @@
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="25dp"
                 android:text="Book Info"
+                android:textColor="@color/black"
                 android:textSize="20sp" />
 
             <androidx.cardview.widget.CardView
@@ -219,7 +220,7 @@
                 android:layout_marginBottom="5dp"
                 app:cardCornerRadius="6dp">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="10dp">
@@ -232,6 +233,7 @@
                         android:textSize="17sp"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="10dp"
+                        android:layout_alignParentStart="true"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -239,12 +241,17 @@
                         android:id="@+id/publisherView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Blue Hills"
-                        android:textColor="@color/black"
-                        android:textSize="17sp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginStart="30dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
+                        android:layout_toEndOf="@id/PUBLISHER_VIEW"
+                        android:text="Blue Hills is is s is ss s s s s s s s  s s  s s is is a ver ver ver ver ver ver ver "
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/black"
+                        android:textSize="17sp"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/PUBLISHER_VIEW"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
@@ -253,6 +260,8 @@
                         android:layout_height="wrap_content"
                         android:text="Published"
                         android:textSize="17sp"
+                        android:layout_below="@id/publisherView"
+                        android:layout_alignParentStart="true"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="15dp"
                         app:layout_constraintStart_toStartOf="parent"
@@ -262,13 +271,18 @@
                         android:id="@+id/publishedDateView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="22 Feb 1990"
-                        android:textColor="@color/black"
-                        android:textSize="17sp"
+                        android:layout_below="@id/publisherView"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginStart="30dp"
                         android:layout_marginTop="15dp"
                         android:layout_marginEnd="10dp"
-                        app:layout_constraintTop_toBottomOf="@+id/publisherView"
-                        app:layout_constraintEnd_toEndOf="parent" />
+                        android:layout_toEndOf="@id/PUBLISHED_DATE_VIEW"
+                        android:text="22 Feb 1990"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/black"
+                        android:textSize="17sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/publisherView" />
 
                     <TextView
                         android:id="@+id/CATEGORIES_VIEW"
@@ -276,6 +290,8 @@
                         android:layout_height="wrap_content"
                         android:text="Genre"
                         android:textSize="17sp"
+                        android:layout_below="@id/publishedDateView"
+                        android:layout_alignParentStart="true"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="10dp"
                         app:layout_constraintStart_toStartOf="parent"
@@ -285,15 +301,20 @@
                         android:id="@+id/categoriesView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Fantasy, Sci Fi"
-                        android:textColor="@color/black"
-                        android:textSize="17sp"
+                        android:layout_below="@id/publishedDateView"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginStart="30dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
+                        android:layout_toEndOf="@id/CATEGORIES_VIEW"
+                        android:text="Fantasy, Sci Fi"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/black"
+                        android:textSize="17sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/publishedDateView" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                </RelativeLayout>
 
             </androidx.cardview.widget.CardView>
 
@@ -312,10 +333,10 @@
                 android:id="@+id/fromAuthorRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/FROM_AUTHOR"
                 android:layout_marginTop="15dp"
                 android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:layout_below="@+id/FROM_AUTHOR"/>
+                android:paddingEnd="10dp" />
 
 
             <TextView
