@@ -12,14 +12,16 @@
         <entry key="app/src/main/res/drawable/ic_bookshelf_svg.xml" value="0.33" />
         <entry key="app/src/main/res/drawable/ic_home.xml" value="0.3335" />
         <entry key="app/src/main/res/drawable/ic_home_svg.xml" value="0.33" />
-        <entry key="app/src/main/res/drawable/ic_just_logo.xml" value="0.33" />
+        <entry key="app/src/main/res/drawable/ic_just_logo.xml" value="0.3165051269531251" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.3335" />
+        <entry key="app/src/main/res/drawable/ic_launcher_logo_foreground.xml" value="0.7619366455078126" />
         <entry key="app/src/main/res/drawable/ic_search_svg.xml" value="0.33" />
         <entry key="app/src/main/res/drawable/ic_settiings_svg.xml" value="0.33" />
         <entry key="app/src/main/res/drawable/ic_settings_svg.xml" value="0.33" />
         <entry key="app/src/main/res/drawable/ic_svg_home.xml" value="0.33" />
         <entry key="app/src/main/res/drawable/icon_account.xml" value="0.163" />
         <entry key="app/src/main/res/drawable/icon_bookshelf.xml" value="0.163" />
+        <entry key="app/src/main/res/drawable/icon_main.xml" value="0.329" />
         <entry key="app/src/main/res/drawable/icon_search.xml" value="0.163" />
         <entry key="app/src/main/res/drawable/icon_settings.xml" value="0.163" />
         <entry key="app/src/main/res/drawable/just_logo.xml" value="0.33" />

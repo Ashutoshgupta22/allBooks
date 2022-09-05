@@ -46,7 +46,10 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
                 email = emailResetPassword.getText().toString().trim();
 
-               checkIfEmailRegistered();
+                if (! email.isEmpty())
+                    checkIfEmailRegistered(email);
+                else
+                    emailResetPassword.setError("Please enter a valid email");
             }
         });
 
@@ -61,7 +64,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
     }
 
-    private void checkIfEmailRegistered() {
+    private void checkIfEmailRegistered(String email) {
 
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 

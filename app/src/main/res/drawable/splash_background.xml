@@ -2,8 +2,24 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:drawable="@drawable/ic_launcher_background"/>
-    <item android:drawable="@drawable/ic_launcher_logo_foreground"/>
+<!--
+    <item android:drawable="@drawable/ic_launcher_logo_foreground" />
+-->
+<!--<item>-->
 
+<!--    <bitmap-->
+
+<!--        android:src="@drawable/ic_launcher_logo_foreground"-->
+<!--        />-->
+
+<!--</item>-->
+
+
+    <item
+        android:gravity="center"
+        android:drawable="@drawable/ic_just_logo"
+
+        android:padding= "16dp"/>
 
 <!--    <item>-->
 <!--<bitmap-->
