@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(onItemSelectedListener);
         getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout,new HomeFrag()).commit();
 
-        handleRedirectUri();
+       // handleRedirectUri();
 
     }
 

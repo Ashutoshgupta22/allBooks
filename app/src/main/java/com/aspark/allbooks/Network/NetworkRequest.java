@@ -205,6 +205,7 @@ public class NetworkRequest {
     public void getAccessToken(String authCode) {
 
          //TODO Why is this needed?
+        //I think it is the older code for when i was trying to implement google OAuth login
 
          String tokenUrl ="https://oauth2.googleapis.com/token?" +
                 "code="+authCode +"&" +
@@ -254,118 +255,118 @@ public class NetworkRequest {
         requestQueue.add(tokenObject);
     }
 
-    public void getAccountData() {
+//    public void getAccountData() {
+//
+//        String url = "https://www.googleapis.com/books/v1/mylibrary/bookshelves/0/volumes";
+//
+//        JsonObjectRequest objectRequest = new JsonObjectRequest(GET, url, null, new Response.Listener<JSONObject>() {
+//            @Override
+//            public void onResponse(JSONObject response) {
+//
+////                Log.i(TAG, "onResponse: AccountData "+response.toString());
+////
+////                JSONArray jsonArray ;
+////                JSONObject volumeInfo;
+////                try {
+////                    jsonArray = response.getJSONArray("items");
+////                    shelfList = new ArrayList<>();
+////
+////
+////                    for(int i=0; i < jsonArray.length();++i) {
+////
+////                        DataModel dataModel = new DataModel();
+////                        if (jsonArray.getJSONObject(i).has("id")) {
+////
+////                            String volumeId = jsonArray.getJSONObject(i).getString("id");
+////                            dataModel.setVolumeId(volumeId);
+////                        }
+////                        volumeInfo = jsonArray.getJSONObject(i).getJSONObject("volumeInfo");
+////
+////                        shelfList.add(storeData(volumeInfo, dataModel));
+////
+////                    }
+////
+////                } catch (JSONException e) {
+////                    e.printStackTrace();}
+//            }
+//            }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//
+//                int errorCode = error.networkResponse.statusCode;
+//                Log.i(TAG, " getAccountData ERROR CODE "+errorCode);
+//
+//                if (errorCode == 401) {
+//                    Log.i(TAG, "refreshing access token");
+//                    refreshAccessToken();
+//                }
+//
+//            }
+//        }){
+//
+//            //add header to send access token along
+//            @Override
+//            public Map<String, String> getHeaders() {
+//                SharedPreferences preferences = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
+//
+//                HashMap<String, String> header = new HashMap<>();
+//
+//                //TODO if there is something wrong with access token after refreshed it will loop nonstop from getRefresh to getAccount.
+//
+//                if (ACCESS_TOKEN==null)
+//                    ACCESS_TOKEN = preferences.getString("access_token","");
+//
+//                header.put("Authorization","Bearer "+ACCESS_TOKEN);
+//
+//                    Log.i(TAG, "onResponse: ACCESS_TOKEN "+ACCESS_TOKEN);
+//                    return header;
+//            }
+//        } ;
+//        requestQueue.add(objectRequest);
+//    }
 
-        String url = "https://www.googleapis.com/books/v1/mylibrary/bookshelves/0/volumes";
-
-        JsonObjectRequest objectRequest = new JsonObjectRequest(GET, url, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-
-//                Log.i(TAG, "onResponse: AccountData "+response.toString());
+//    public void refreshAccessToken(){
 //
-//                JSONArray jsonArray ;
-//                JSONObject volumeInfo;
-//                try {
-//                    jsonArray = response.getJSONArray("items");
-//                    shelfList = new ArrayList<>();
+//        SharedPreferences preferences = context.getSharedPreferences(context.getPackageName(),Context.MODE_PRIVATE);
+//        String savedRefreshToken = preferences.getString("refresh_token","");
+//        Log.i(TAG, "SAVED refreshToken: " +savedRefreshToken);
 //
+//        String refreshUrl = "https://oauth2.googleapis.com/token?" +
+//                "client_id="+ "906052742414-kd8vmeo07segpllhjjpgocqjlshbhs7t.apps.googleusercontent.com" +
+//                "&client_secret="+"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" +
+//                "&refresh_token=" + savedRefreshToken +
+//                "&grant_type=refresh_token" ;
 //
-//                    for(int i=0; i < jsonArray.length();++i) {
+//            JsonObjectRequest objectRequest = new JsonObjectRequest(POST, refreshUrl, null, new Response.Listener<JSONObject>() {
+//                @Override
+//                public void onResponse(JSONObject response) {
 //
-//                        DataModel dataModel = new DataModel();
-//                        if (jsonArray.getJSONObject(i).has("id")) {
+//                    try {
+//                        ACCESS_TOKEN = response.getString("access_token");
+//                        preferences.edit().putString("access_token",ACCESS_TOKEN).apply();
+//                        getAccountData();
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }, new Response.ErrorListener() {
+//                @Override
+//                public void onErrorResponse(VolleyError error) {
+//                    Log.i(TAG, "onErrorResponse: can't  refresh access token "+error.getMessage());
 //
-//                            String volumeId = jsonArray.getJSONObject(i).getString("id");
-//                            dataModel.setVolumeId(volumeId);
-//                        }
-//                        volumeInfo = jsonArray.getJSONObject(i).getJSONObject("volumeInfo");
+//                    int errorCode = error.networkResponse.statusCode;
+//                    if (errorCode == 400) {
 //
-//                        shelfList.add(storeData(volumeInfo, dataModel));
-//
+//                        Log.i(TAG, "onErrorResponse: Refresh token expired");
+//                        //  getNewRefreshToken();
 //                    }
 //
-//                } catch (JSONException e) {
-//                    e.printStackTrace();}
-            }
-            }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                int errorCode = error.networkResponse.statusCode;
-                Log.i(TAG, " getAccountData ERROR CODE "+errorCode);
-
-                if (errorCode == 401) {
-                    Log.i(TAG, "refreshing access token");
-                    refreshAccessToken();
-                }
-
-            }
-        }){
-
-            //add header to send access token along
-            @Override
-            public Map<String, String> getHeaders() {
-                SharedPreferences preferences = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
-
-                HashMap<String, String> header = new HashMap<>();
-
-                //TODO if there is something wrong with access token after refreshed it will loop nonstop from getRefresh to getAccount.
-
-                if (ACCESS_TOKEN==null)
-                    ACCESS_TOKEN = preferences.getString("access_token","");
-
-                header.put("Authorization","Bearer "+ACCESS_TOKEN);
-
-                    Log.i(TAG, "onResponse: ACCESS_TOKEN "+ACCESS_TOKEN);
-                    return header;
-            }
-        } ;
-        requestQueue.add(objectRequest);
-    }
-
-    public void refreshAccessToken(){
-
-        SharedPreferences preferences = context.getSharedPreferences(context.getPackageName(),Context.MODE_PRIVATE);
-        String savedRefreshToken = preferences.getString("refresh_token","");
-        Log.i(TAG, "SAVED refreshToken: " +savedRefreshToken);
-
-        String refreshUrl = "https://oauth2.googleapis.com/token?" +
-                "client_id="+ "906052742414-kd8vmeo07segpllhjjpgocqjlshbhs7t.apps.googleusercontent.com" +
-                "&client_secret="+"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" +
-                "&refresh_token=" + savedRefreshToken +
-                "&grant_type=refresh_token" ;
-
-            JsonObjectRequest objectRequest = new JsonObjectRequest(POST, refreshUrl, null, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-
-                    try {
-                        ACCESS_TOKEN = response.getString("access_token");
-                        preferences.edit().putString("access_token",ACCESS_TOKEN).apply();
-                        getAccountData();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.i(TAG, "onErrorResponse: can't  refresh access token "+error.getMessage());
-
-                    int errorCode = error.networkResponse.statusCode;
-                    if (errorCode == 400) {
-
-                        Log.i(TAG, "onErrorResponse: Refresh token expired");
-                        //  getNewRefreshToken();
-                    }
-
-                }
-            });
-
-            requestQueue.add(objectRequest);
-
-    }
+//                }
+//            });
+//
+//            requestQueue.add(objectRequest);
+//
+//    }
 
     public void fromAuthor(String authorName,TextView fromAuthor_tv) {
 
@@ -570,38 +571,38 @@ public class NetworkRequest {
         }
     }
 
-    private void sortRecentlyViewedList(ArrayList<DataModel> recentlyViewedList, ArrayList<String> list) {
-
-        for (int i=0; i< list.size(); ++i) {
-            DataModel getDataModel = recentlyViewedList.get(i);
-
-            Log.d(TAG, "onResponse: got getDataModel");
-
-            if (! list.get(i).equals(getDataModel.getVolumeId()))
-
-                for (int j=i+1; j< recentlyViewedList.size(); j++) {
-
-                    DataModel swapDataModel = recentlyViewedList.get(j);
-
-                    if ( list.get(i).equals(swapDataModel.getVolumeId())){
-
-                        Log.d(TAG, "onResponse: swapping");
-
-                        recentlyViewedList.remove(j);
-                        recentlyViewedList.add(j, getDataModel);
-                        recentlyViewedList.remove(i);
-                        recentlyViewedList.add(i,swapDataModel);
-
-                    }
-                    Log.d(TAG, "onResponse: recentlyList size "+recentlyViewedList.size());
-                    Log.d(TAG, "onResponse: j "+j);
-                }
-            Log.i(TAG, "onResponse: RecentlyViewList "+recentlyViewedList.get(i).getVolumeId());
-        }
-
-
-
-    }
+//    private void sortRecentlyViewedList(ArrayList<DataModel> recentlyViewedList, ArrayList<String> list) {
+//
+//        for (int i=0; i< list.size(); ++i) {
+//            DataModel getDataModel = recentlyViewedList.get(i);
+//
+//            Log.d(TAG, "onResponse: got getDataModel");
+//
+//            if (! list.get(i).equals(getDataModel.getVolumeId()))
+//
+//                for (int j=i+1; j< recentlyViewedList.size(); j++) {
+//
+//                    DataModel swapDataModel = recentlyViewedList.get(j);
+//
+//                    if ( list.get(i).equals(swapDataModel.getVolumeId())){
+//
+//                        Log.d(TAG, "onResponse: swapping");
+//
+//                        recentlyViewedList.remove(j);
+//                        recentlyViewedList.add(j, getDataModel);
+//                        recentlyViewedList.remove(i);
+//                        recentlyViewedList.add(i,swapDataModel);
+//
+//                    }
+//                    Log.d(TAG, "onResponse: recentlyList size "+recentlyViewedList.size());
+//                    Log.d(TAG, "onResponse: j "+j);
+//                }
+//            Log.i(TAG, "onResponse: RecentlyViewList "+recentlyViewedList.get(i).getVolumeId());
+//        }
+//
+//
+//
+//    }
 
     public void getBookshelf(RecyclerView bookshelf_rv, List<String> bookshelfList) {
 

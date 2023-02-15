@@ -26,8 +26,8 @@ public class SplashActivity extends AppCompatActivity {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
-        SharedPreferences preferences = getSharedPreferences(getPackageName(),MODE_PRIVATE);
-        String refreshToken = preferences.getString("refresh_token",null);
+       // SharedPreferences preferences = getSharedPreferences(getPackageName(),MODE_PRIVATE);
+       // String refreshToken = preferences.getString("refresh_token",null);
 
         // this method delays the calling of mainActivity
         new Handler().postDelayed(new Runnable() {
@@ -36,9 +36,9 @@ public class SplashActivity extends AppCompatActivity {
 
                 Intent intent;
                 Log.i("splash", "run: Splash Activity current User "+currentUser);
-                Log.i("splash", "run: Splash Activity refresh token "+refreshToken);
+               // Log.i("splash", "run: Splash Activity refresh token "+refreshToken);
 
-                if (currentUser != null && refreshToken !=null) {
+                if (currentUser != null ) {
 
                     Log.i("splash", "run: WELCOME BACK :)");
                     intent = new Intent(SplashActivity.this, MainActivity.class);

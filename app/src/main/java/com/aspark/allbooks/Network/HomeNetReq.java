@@ -194,81 +194,81 @@ public class HomeNetReq {
     }
 
 
-    public void getRecommendedBooks(RecyclerView recommended_RV){
-
-        List<DataModel> recommendedList = new ArrayList<>();
-
-        Random random = new Random();
-        int startIndex = random.nextInt(60);
-        Log.i(TAG, "getRecommendedBooks: startIndex= "+startIndex);
-
-        String url ="https://www.googleapis.com/books/v1/mylibrary/bookshelves/8/volumes?"+"&startIndex="+ startIndex+"&maxResults=40"+"&key=AIzaSyAuSale2ufh6vE-gozkwcT-xsAD7cJyNCg";
-
-        JsonObjectRequest objectRequest = new JsonObjectRequest(GET, url, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.i(TAG, "onResponse: GOT the Recommended Books");
-                Log.i(TAG, response.toString());
-
-                JSONArray jsonArray;
-                JSONObject volumeInfo;
-                try {
-                    jsonArray = response.getJSONArray("items");
-                    for (int i = 0; i < jsonArray.length() && recommendedList.size() <=16; ++i) {
-
-                        DataModel dataModel = new DataModel();
-
-                        if (jsonArray.getJSONObject(i).has("id")) {
-
-                            String volumeId = jsonArray.getJSONObject(i).getString("id");
-                            dataModel.setVolumeId(volumeId);
-                        }
-
-                        volumeInfo = jsonArray.getJSONObject(i).getJSONObject("volumeInfo");
-
-                        if (volumeInfo.has("imageLinks"))
-                            recommendedList.add(storeData(volumeInfo, dataModel));
-
-                    }
-                    recommended_RV.setAdapter(new ShelfAdapter(context, recommendedList));
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                Log.d(TAG, "onErrorResponse: Could not get recommended list "+error.getMessage());
-
-                int errorCode = error.networkResponse.statusCode;
-                if (errorCode == 401) {
-
-                    NetworkRequest networkReq = new NetworkRequest(context);
-                            networkReq.getAccountData();
-                }
-
-
-            }
-        }){
-
-            @Override
-            public Map<String, String> getHeaders() {
-
-                SharedPreferences preferences = context.getSharedPreferences(context.getPackageName(),Context.MODE_PRIVATE);
-                HashMap<String ,String> header = new HashMap<>();
-
-                if (ACCESS_TOKEN==null)
-                    ACCESS_TOKEN = preferences.getString("access_token","");
-
-                header.put("Authorization","Bearer "+ACCESS_TOKEN);
-                Log.d(TAG, "Recommended books access token "+ACCESS_TOKEN);
-
-                return header;
-
-            }
-        };
-        requestQueue.add(objectRequest);
-    }
+//    public void getRecommendedBooks(RecyclerView recommended_RV){
+//
+//        List<DataModel> recommendedList = new ArrayList<>();
+//
+//        Random random = new Random();
+//        int startIndex = random.nextInt(60);
+//        Log.i(TAG, "getRecommendedBooks: startIndex= "+startIndex);
+//
+//        String url ="https://www.googleapis.com/books/v1/mylibrary/bookshelves/8/volumes?"+"&startIndex="+ startIndex+"&maxResults=40"+"&key=AIzaSyAuSale2ufh6vE-gozkwcT-xsAD7cJyNCg";
+//
+//        JsonObjectRequest objectRequest = new JsonObjectRequest(GET, url, null, new Response.Listener<JSONObject>() {
+//            @Override
+//            public void onResponse(JSONObject response) {
+//                Log.i(TAG, "onResponse: GOT the Recommended Books");
+//                Log.i(TAG, response.toString());
+//
+//                JSONArray jsonArray;
+//                JSONObject volumeInfo;
+//                try {
+//                    jsonArray = response.getJSONArray("items");
+//                    for (int i = 0; i < jsonArray.length() && recommendedList.size() <=16; ++i) {
+//
+//                        DataModel dataModel = new DataModel();
+//
+//                        if (jsonArray.getJSONObject(i).has("id")) {
+//
+//                            String volumeId = jsonArray.getJSONObject(i).getString("id");
+//                            dataModel.setVolumeId(volumeId);
+//                        }
+//
+//                        volumeInfo = jsonArray.getJSONObject(i).getJSONObject("volumeInfo");
+//
+//                        if (volumeInfo.has("imageLinks"))
+//                            recommendedList.add(storeData(volumeInfo, dataModel));
+//
+//                    }
+//                    recommended_RV.setAdapter(new ShelfAdapter(context, recommendedList));
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//
+//                Log.d(TAG, "onErrorResponse: Could not get recommended list "+error.getMessage());
+//
+//                int errorCode = error.networkResponse.statusCode;
+//                if (errorCode == 401) {
+//
+//                    NetworkRequest networkReq = new NetworkRequest(context);
+//                            networkReq.getAccountData();
+//                }
+//
+//
+//            }
+//        }){
+//
+//            @Override
+//            public Map<String, String> getHeaders() {
+//
+//                SharedPreferences preferences = context.getSharedPreferences(context.getPackageName(),Context.MODE_PRIVATE);
+//                HashMap<String ,String> header = new HashMap<>();
+//
+//                if (ACCESS_TOKEN==null)
+//                    ACCESS_TOKEN = preferences.getString("access_token","");
+//
+//                header.put("Authorization","Bearer "+ACCESS_TOKEN);
+//                Log.d(TAG, "Recommended books access token "+ACCESS_TOKEN);
+//
+//                return header;
+//
+//            }
+//        };
+//        requestQueue.add(objectRequest);
+//    }
 }
