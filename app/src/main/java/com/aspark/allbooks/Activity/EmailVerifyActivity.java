@@ -35,6 +35,7 @@ public class EmailVerifyActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 startActivity(new Intent(EmailVerifyActivity.this,LoginActivity.class));
+                finish();
 
             }
         });

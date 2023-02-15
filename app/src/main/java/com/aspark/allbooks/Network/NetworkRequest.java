@@ -127,9 +127,7 @@ public class NetworkRequest {
 
     private DataModel storeData( JSONObject volumeInfo,DataModel booksData) throws JSONException {
 
-
-
-        booksData.setTitle(volumeInfo.getString("title"));
+         booksData.setTitle(volumeInfo.getString("title"));
 
         if (volumeInfo.has("authors")){
             booksData.setAuthor(volumeInfo.getJSONArray("authors").getString(0));
@@ -173,8 +171,9 @@ public class NetworkRequest {
 
         if (volumeInfo.has("language")) {
             Log.d(TAG, "storeData: language= "+volumeInfo.getString("language"));
+
             if (volumeInfo.getString("language").equals("en"))
-            booksData.setLanguage("English");
+                booksData.setLanguage("English");
         }
         else
             booksData.setLanguage("Unknown");
@@ -205,9 +204,9 @@ public class NetworkRequest {
 
     public void getAccessToken(String authCode) {
 
+         //TODO Why is this needed?
 
-
-        String tokenUrl ="https://oauth2.googleapis.com/token?" +
+         String tokenUrl ="https://oauth2.googleapis.com/token?" +
                 "code="+authCode +"&" +
                 "client_id="+ "906052742414-kd8vmeo07segpllhjjpgocqjlshbhs7t.apps.googleusercontent.com"+"&" +
                 "client_secret="+ "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" +"&" +
@@ -232,7 +231,7 @@ public class NetworkRequest {
                         editor.putString("refresh_token",REFRESH_TOKEN);
                         Log.i(TAG, "onResponse: REFRESH_TOKEN "+REFRESH_TOKEN);
                     }
-                        else {
+                    else {
                         Log.i(TAG, "onResponse: NO REFRESH TOKEN FOUND");
                         editor.putString("refresh_token", null);
                     }
@@ -240,19 +239,15 @@ public class NetworkRequest {
                         editor.putString("access_token",ACCESS_TOKEN);
                         editor.apply();
 
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
 
                 Log.i(TAG, "onErrorResponse: couldn't get token "+ error.getLocalizedMessage());
-
             }
         });
 
@@ -452,7 +447,7 @@ public class NetworkRequest {
         String cUrl = "https://www.googleapis.com/books/v1/volumes?q=+subject:" +categories.get(0) + "&startIndex="+ startIndex+"&maxResults=40"+"&key=" + "AIzaSyAuSale2ufh6vE-gozkwcT-xsAD7cJyNCg";
 
         if (categories.size() >= 3)
-        Log.d(TAG, "youMayLike: Categories "+categories.get(0)+ categories.get(1)+categories.get(2));
+            Log.d(TAG, "youMayLike: Categories "+categories.get(0)+ categories.get(1)+categories.get(2));
 
         JsonObjectRequest objectRequest = new JsonObjectRequest(GET, cUrl, null, new Response.Listener<JSONObject>() {
             @Override

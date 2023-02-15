@@ -52,7 +52,7 @@ public class FireStore {
         users.put("password",password);
         users.put("last_login",FieldValue.serverTimestamp());
         if (first_login !=null)
-        users.put("first_login",FieldValue.serverTimestamp());
+             users.put("first_login",FieldValue.serverTimestamp());
 
         db.collection("users")
                 .add(users)
